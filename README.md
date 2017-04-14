@@ -1,6 +1,6 @@
-# lua.cr
+# lua.cr [![Build Status](https://travis-ci.org/veelenga/lua.cr.svg?branch=master)](https://travis-ci.org/veelenga/lua.cr)
 
-Bindings to liblua. UNDER CONSTRUCTION
+Bindings to liblua. **UNDER CONSTRUCTION**
 
 ## Installation
 
@@ -14,7 +14,16 @@ dependencies:
 
 ## Usage
 
-TODO:
+```crystal
+require "lua"
+
+state = LibLua.l_newstate
+
+LibLua.l_openlibs state
+LibLua.l_loadstring state, "print(table.concat({ 'Hello', 'from', 'Lua!' }, ' '))"
+LibLua.pcallk state, 0, 0, -1, 0, nil #=> Hello from Lua!
+LibLua.close state
+```
 
 ## Contributing
 
