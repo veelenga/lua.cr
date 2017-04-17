@@ -34,6 +34,16 @@ module Lua
       it "can push symbol value" do
         Stack.new.tap(&.<< :message)[1].should eq "message"
       end
+
+      it "raises error when it is a wrong object" do
+        s = Stack.new
+        expect_raises { s << Exception.new }
+      end
+
+      it "accepts custom object that responds to :to_lua" do
+        obj = LuaReporter.new("Hello lua")
+        Stack.new.tap(&.<< obj)[1].should eq "Hello lua"
+      end
     end
 
     describe "#[]" do
@@ -68,6 +78,20 @@ module Lua
 
       it "returns 0 when stack is empty" do
         Stack.new.top.should eq 0
+      end
+    end
+
+    describe "#pop" do
+      it "returns the element from the top of the stack" do
+        Stack.new.tap(&.<< 10.01).pop.should eq 10.01
+      end
+
+      it "removes the element from the top of the stack" do
+        Stack.new.tap(&.<< 10.01).tap(&.pop).top.should eq 0
+      end
+
+      it "returns nil when stack is empty" do
+        Stack.new.pop.should eq nil
       end
     end
 

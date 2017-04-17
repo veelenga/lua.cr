@@ -1,4 +1,6 @@
 module Lua
+  alias LuaType = Nil | Bool | Float64 | String | Table
+
   enum Type
     TNONE = -1
     TNIL = 0
