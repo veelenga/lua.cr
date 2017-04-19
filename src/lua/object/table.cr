@@ -55,6 +55,14 @@ module Lua
       end
     end
 
+    # Converts table to crystal hash.
+    #
+    # ```
+    # t[1] = "a"
+    # t["io"] = "b"
+    # t[:gog] = "c"
+    # t.to_h # => {"gog" => "c", 1.0 => "a", "io" => "b"}
+    # ```
     def to_h
       self.each_with_object({} of LuaType => LuaType) do |pair, o|
         k, v = pair

@@ -4,7 +4,7 @@ module Lua
     #
     # ```
     # stack.createtable([1, 2, 3])
-    # stack.pop #=> {1.0 => 1.0, 2.0 => 2.0, 3.0 => 3.0}
+    # stack.pop # => {1.0 => 1.0, 2.0 => 2.0, 3.0 => 3.0}
     # ```
     def createtable(a : Array)
       h = a.map_with_index { |e, i| [i + 1, e] }.to_h
@@ -15,7 +15,7 @@ module Lua
     #
     # ```
     # stack.creattable({"one" => "1", "two" => 2})
-    # stack.pop #=> {"one" => "1", "two" => 2}
+    # stack.pop # => {"one" => "1", "two" => 2}
     # ```
     def createtable(a : Hash)
       createtable a, 0, a.size
