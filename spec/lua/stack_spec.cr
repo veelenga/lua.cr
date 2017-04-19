@@ -35,6 +35,31 @@ module Lua
         Stack.new.tap(&.<< :message)[1].should eq "message"
       end
 
+      it "can push array" do
+        r = Stack.new.tap(&.<< %w(lua is cool))[1].as(Table).map { |k, v| v }
+        r.should eq %w(lua is cool)
+      end
+
+      it "can push hash" do
+        r = Stack.new.tap(&.<< ({"one": '1', "two": '2'}))[1].as(Table).map { |k, v| {k.as(String), v} }
+        r.sort_by(&.[0]).should eq [{"one", "1"}, {"two", "2"}]
+      end
+
+      it "can push tuple" do
+        r = Stack.new.tap(&.<<({:one, :two, :three}))[1].as(Table).map { |k, v| v }
+        r.should eq %w(one two three)
+      end
+
+      it "can push named tuple" do
+        r = Stack.new.tap(&.<<({one: '1', two: '2', three: '3'}))[1].as(Table).map { |k, v| v.as(String) }
+        r.sort.should eq %w(1 2 3)
+      end
+
+      it "can push inner array" do
+        r = Stack.new.tap(&.<<({"inner" => [1, 2, 3]}))[1].as(Table)["inner"].as(Table).map { |k, v| v.as(Float) }
+        r.sort.should eq [1, 2, 3]
+      end
+
       it "raises error when it is a wrong object" do
         s = Stack.new
         expect_raises { s << Exception.new }
@@ -63,21 +88,21 @@ module Lua
           s << false
           s << "hello!"
         end
-        stack.to_s.should eq "3 : TSTRING(string) hello!\n2 : TBOOLEAN(boolean) false\n1 : TNUMBER(number) 42.24\n"
+        stack.to_s.should eq "3 : TSTRING(string) hello!\n2 : TBOOLEAN(boolean) false\n1 : TNUMBER(number) 42.24"
       end
     end
 
-    describe "#top" do
+    describe "#size" do
       it "returns the index of the top element" do
         Stack.new.tap do |s|
           s << 3
           s << :times
           s << :faster
-        end.top.should eq 3
+        end.size.should eq 3
       end
 
       it "returns 0 when stack is empty" do
-        Stack.new.top.should eq 0
+        Stack.new.size.should eq 0
       end
     end
 
@@ -87,7 +112,7 @@ module Lua
       end
 
       it "removes the element from the top of the stack" do
-        Stack.new.tap(&.<< 10.01).tap(&.pop).top.should eq 0
+        Stack.new.tap(&.<< 10.01).tap(&.pop).size.should eq 0
       end
 
       it "returns nil when stack is empty" do

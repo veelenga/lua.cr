@@ -1,66 +1,75 @@
 module Lua
   class Table < Object
-    include Enumerable({ LuaType, LuaType })
-    include Iterable({ LuaType, LuaType })
+    include Enumerable({LuaType, LuaType})
+    include Iterable({LuaType, LuaType})
 
-    # Sets value to index in a table
+    # Sets value to index in a table.
     #
     # ```
     # t[3] = "test"
-    # t[3] #=> "test"
+    # t[3] # => "test"
     # ```
     def []=(index, value)
-      @stack << index
-      @stack << value
-      LibLua.settable(@stack.state, @pos)
+      preload do |pos|
+        @stack << index
+        @stack << value
+        LibLua.settable(@stack.state, pos)
+      end
     end
 
     # Returns the value placed at index
-    # or nil if there is no such value
+    # or nil if there is no such value.
     #
     # ```
     # t[2] = "test"
-    # t[2] #=> "test"
+    # t[2] # => "test"
     # ```
     def [](index)
-      @stack << index
-      LibLua.gettable(@stack.state, @pos)
-      @stack.pop
+      preload do |pos|
+        @stack << index
+        LibLua.gettable(@stack.state, pos)
+        @stack.pop
+      end
     end
 
-    # Traverses a table in Lua using
-    # [next](http://www.lua.org/manual/5.3/manual.html#pdf-next)
+    # Traverses a table in Lua stack using
+    # [next](http://www.lua.org/manual/5.3/manual.html#pdf-next).
     #
     # ```
     # t[1] = '1'
     # t[2] = '2'
     # t[3] = '3'
     # t.each do |k, v|
-    #   k #=> 1.0, 2.0, 3.0 (represents table index)
-    #   v #=> '1', '2', '3' (represents table value)
+    #   k # => 1.0, 2.0, 3.0 (represents table index)
+    #   v # => '1', '2', '3' (represents table value)
     # end
     # ```
     def each : Nil
-      @stack << nil
-      while(LibLua.next(@stack.state, @pos) != 0)
-        yield({ @stack[-2], @stack[-1] })
-        @stack.pop
+      preload do |pos|
+        @stack << nil
+        while (LibLua.next(@stack.state, pos) != 0)
+          k, v = @stack[-2], @stack[-1]
+          yield({k, v})
+          @stack.pop
+        end
       end
     end
 
-    # Represents table as a string
+    def to_h
+      self.each_with_object({} of LuaType => LuaType) do |pair, o|
+        k, v = pair
+        o[k] = v
+      end
+    end
+
+    # Represents table as a string.
     #
     # ```
-    # t #=> [1.1, 2.1, 3.1]
-    # t.to_s #=> { 1.0 => 1.1 } { 2.0 => 2.1 } { 3.0 => 3.1 }
+    # t      # => [1.1, 2.1, 3.1]
+    # t.to_s # => { 1.0 => 1.1 } { 2.0 => 2.1 } { 3.0 => 3.1 }
     # ```
     def to_s(io : IO)
-      io << String.build do |str|
-        self.each do |k, v|
-          str << " " unless str.empty?
-          str << "{ #{k} => #{v} }"
-        end
-      end
+      to_h.to_s io
     end
   end
 end

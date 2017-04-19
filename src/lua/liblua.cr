@@ -12,6 +12,12 @@ lib LibLua
   alias Writer = (State, Void*, LibC::SizeT, Void* -> LibC::Int)
   alias Hook = (State, Debug* -> Void)
 
+  enum Option
+    REFNIL        =       -1
+    NOREF         =       -2
+    REGISTRYINDEX = -1001000
+  end
+
   struct Debug
     event : LibC::Int
     name : LibC::Char*
@@ -32,6 +38,8 @@ lib LibLua
   fun l_newstate = luaL_newstate : State
   fun l_openlibs = luaL_openlibs(l : State)
   fun l_loadstring = luaL_loadstring(l : State, s : LibC::Char*) : LibC::Int
+  fun l_ref = luaL_ref(l : State, t : LibC::Int) : LibC::Int
+  fun l_unref = luaL_unref(l : State, t : LibC::Int, ref : LibC::Int)
 
   fun pushnil = lua_pushnil(l : State)
   fun pushnumber = lua_pushnumber(l : State, n : Number)

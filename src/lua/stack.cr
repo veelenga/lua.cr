@@ -1,6 +1,5 @@
 module Lua
   class Stack
-
     getter! state
 
     # Initializes new Lua stack running in a new, independent state.
@@ -9,7 +8,7 @@ module Lua
     #
     # ```
     # stack = Lua::Stack.new
-    # #...
+    # # ...
     # stack.close
     # ```
     def initialize
@@ -21,7 +20,7 @@ module Lua
     #
     # ```
     # stack = Lua::Stack.new
-    # #...
+    # # ...
     # stack.close
     # ```
     def close
@@ -35,25 +34,24 @@ module Lua
     #   stack << 10
     #   stack << "str"
     #   stack << false
-    #  end
+    # end
     # ```
     def <<(o)
       case o
-        when Nil then LibLua.pushnil(@state)
-        when Int then LibLua.pushinteger(@state, o)
-        when Float then LibLua.pushnumber(@state, o)
-        when Bool then LibLua.pushboolean(@state, o ? 1 : 0)
-        when Char then LibLua.pushstring(@state, o.to_s)
-        when String then LibLua.pushstring(@state, o)
-        when Symbol then LibLua.pushstring(@state, o.to_s)
-        when Array, Tuple then push(o.to_a)
-        when Hash, NamedTuple then push(o.to_h)
+      when Nil              then LibLua.pushnil(@state)
+      when Int              then LibLua.pushinteger(@state, o)
+      when Float            then LibLua.pushnumber(@state, o)
+      when Bool             then LibLua.pushboolean(@state, o ? 1 : 0)
+      when Char             then LibLua.pushstring(@state, o.to_s)
+      when String           then LibLua.pushstring(@state, o)
+      when Symbol           then LibLua.pushstring(@state, o.to_s)
+      when Array, Tuple     then push(o.to_a)
+      when Hash, NamedTuple then push(o.to_h)
         # TODO: Proc
-        else
-          o.responds_to?(:to_lua) ? o.to_lua(@state) :
-            raise ArgumentError.new(
-              "unable to pass Crystal object of type #{typeof(o)} to Lua"
-            )
+      else
+        o.responds_to?(:to_lua) ? o.to_lua(@state) : raise ArgumentError.new(
+          "unable to pass Crystal object of type #{typeof(o)} to Lua"
+        )
       end
     end
 
@@ -63,58 +61,51 @@ module Lua
     # stack = Lua::Stack.new
     # stack << 10.01
     # stack << "lua"
-    # stack[1] #=> 10.01
-    # stack[2] #=> "lua"
+    # stack[1] # => 10.01
+    # stack[2] # => "lua"
     # ```
     def [](pos : Int)
       return nil if pos == 0
 
       case type_at(pos)
-        when Type::TNIL, Type::TNONE then nil
-
-        when Type::TBOOLEAN
-          LibLua.toboolean(@state, pos) == 1
-
-        when Type::TNUMBER
-          LibLua.tonumberx(@state, pos, nil)
-
-        when Type::TSTRING
-          String.new LibLua.tolstring(@state, pos, nil)
-
-        when Type::TTABLE
-          Table.new(self, pos)
-
-        when Type::TFUNCTION then nil      # TBD
-        when Type::TUSERDATA then nil      # TBD
-        when Type::TTHREAD then nil        # TBD
-        when Type::TLIGHTUSERDATA then nil # TBD
-        else
-          raise ArgumentError.new "unable to detect type of the object to fetch"
+      when Type::TNIL, Type::TNONE then nil
+      when Type::TBOOLEAN          then LibLua.toboolean(@state, pos) == 1
+      when Type::TNUMBER           then LibLua.tonumberx(@state, pos, nil)
+      when Type::TSTRING           then String.new LibLua.tolstring(@state, pos, nil)
+      when Type::TTABLE            then Table.new self, reference(pos)
+      when Type::TFUNCTION         then nil # TBD
+      when Type::TUSERDATA         then nil # TBD
+      when Type::TTHREAD           then nil # TBD
+      when Type::TLIGHTUSERDATA    then nil # TBD
+      else
+        raise ArgumentError.new "unable to detect type of the object to fetch"
       end
     end
 
     # Represents the stack as a string.
     #
+    # ```
     # stack = Lua::Stack.new.tap do |s|
     #   s << 42.24
     #   s << false
     #   s << "hello!"
     # end
-    # stack.to_s #=>
+    # stack.to_s # =>
     #
-    #   # 3 : TSTRING(string) hello!
-    #   # 2 : TBOOLEAN(boolean) false
-    #   # 1 : TNUMBER(number) 42.24
+    # # 3 : TSTRING(string) hello!
+    # # 2 : TBOOLEAN(boolean) false
+    # # 1 : TNUMBER(number) 42.24
+    # ```
     #
     def to_s(io : IO)
       io << String.build do |acc|
-        (1..top).reverse_each do |pos|
+        (1..size).reverse_each do |pos|
           type = type_at(pos)
           name = typename(type)
 
           acc << "#{pos} : #{type}(#{name}) #{self[pos]}\n"
         end
-      end
+      end.strip
     end
 
     # Returns the index of the top element in the stack.
@@ -124,12 +115,24 @@ module Lua
     #
     # ```
     # stack = Lua::Stack.new
-    # stack.top #=> 0
+    # stack.size # => 0
     # stack << 10
-    # stack.top #=> 1
+    # stack.size # => 1
     # ```
-    def top : Int
+    def size : Int
       LibLua.gettop(@state)
+    end
+
+    # Returns the top element and does not remove it from the stack.
+    #
+    # ```
+    # stack = Lua::Stack.new
+    # stack << "hey"
+    # stack.top  # => "hey"
+    # stack.size # => 0
+    # ```
+    def top
+      self[size]
     end
 
     # Removes element from the top of the stack and returns it.
@@ -137,12 +140,12 @@ module Lua
     # ```
     # stack = Lua::Stack.new
     # stack << 10.01
-    # stack.top    #=> 1
-    # stack.pop(1) #=> 10.01
-    # stack.top    #=> 0
+    # stack.size # => 1
+    # stack.pop  # => 10.01
+    # stack.size # => 0
     # ```
     def pop
-      self[top].tap { LibLua.settop(@state, -2) }
+      top.try &.tap { LibLua.settop(@state, -2) }
     end
 
     # Returns type at `pos` in the stack.
@@ -150,7 +153,7 @@ module Lua
     # ```
     # stack = Lua::Stack.new
     # stack << "hello"
-    # stack.type_at(1) #=> TSTRING
+    # stack.type_at(1) # => TSTRING
     # ```
     def type_at(pos : Int)
       Type.new LibLua.type(@state, pos)
@@ -162,8 +165,8 @@ module Lua
     # stack = Lua::Stack.new
     # stack << "my_super_string"
     # stack << 42
-    # stack.typename(1) #=> "string"
-    # stack.typename(2) #=> "number"
+    # stack.typename(1) # => "string"
+    # stack.typename(2) # => "number"
     # ```
     def typename(pos : Int)
       typename type_at(pos)
@@ -173,23 +176,31 @@ module Lua
     #
     # ```
     # stack = Lub::Stack.new
-    # stack.typename(Type::TBOOLEAN) #=> "boolean"
+    # stack.typename(Type::TBOOLEAN) # => "boolean"
     # ```
     def typename(type : Type)
       String.new LibLua.typename(@state, type.value)
     end
 
+    # Creates a reference in registry to object at `pos` is a stack.
+    # It copies a value to stack top, places top element to registry
+    # and removes it from the stack. Returns a reference.
+    def reference(pos)
+      LibLua.pushvalue(@state, pos)
+      LibLua.l_ref(@state, Option::REGISTRYINDEX)
+    end
+
     private def push(a : Array)
-      LibLua.createtable(@state, a.size, 0)
-      settable(a.map_with_index { |e, i| [i + 1, e] }.to_h)
+      h = a.map_with_index { |e, i| [i + 1, e] }.to_h
+      table h, a.size, 0
     end
 
     private def push(a : Hash)
-      LibLua.createtable(@state, 0, a.size)
-      settable a
+      table a, 0, a.size
     end
 
-    private def settable(a : Hash)
+    private def table(a : Hash, narr : Int, nrec : Int)
+      LibLua.createtable(@state, narr, nrec)
       a.each do |k, v|
         self << k
         self << v
