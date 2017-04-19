@@ -122,19 +122,19 @@ module Lua
 
     describe "#type_at" do
       it "can return TNIL type" do
-        Stack.new.tap(&.<< nil).type_at(1).should eq Type::TNIL
+        Stack.new.tap(&.<< nil).type_at(1).should eq TYPE::TNIL
       end
 
       it "can return TBOOLEAN type" do
-        Stack.new.tap(&.<< false).type_at(1).should eq Type::TBOOLEAN
+        Stack.new.tap(&.<< false).type_at(1).should eq TYPE::TBOOLEAN
       end
 
       it "can return TNUMBER type" do
-        Stack.new.tap(&.<< 3).type_at(1).should eq Type::TNUMBER
+        Stack.new.tap(&.<< 3).type_at(1).should eq TYPE::TNUMBER
       end
 
       it "can return TSTRING type" do
-        Stack.new.tap(&.<< "s").type_at(1).should eq Type::TSTRING
+        Stack.new.tap(&.<< "s").type_at(1).should eq TYPE::TSTRING
       end
     end
 

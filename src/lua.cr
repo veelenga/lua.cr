@@ -2,9 +2,9 @@ require "./lua/*"
 require "./lua/object/*"
 
 module Lua
-  alias Option = LibLua::Option
+  extend self
 
-  def self.load(*objects)
+  def load(*objects)
     Stack.new.tap do |s|
       objects.each { |o| s << o }
     end

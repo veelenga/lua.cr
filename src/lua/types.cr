@@ -1,7 +1,7 @@
 module Lua
   alias LuaType = Nil | Bool | Float64 | String | Table
 
-  enum Type
+  enum TYPE
     TNONE          = -1
     TNIL           =  0
     TBOOLEAN       =  1
@@ -12,5 +12,11 @@ module Lua
     TFUNCTION      =  6
     TUSERDATA      =  7
     TTHREAD        =  8
+  end
+
+  enum OPTION
+    REFNIL        =       -1
+    NOREF         =       -2
+    REGISTRYINDEX = -1001000
   end
 end

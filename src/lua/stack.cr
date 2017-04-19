@@ -1,5 +1,11 @@
+require "./stack/*"
+
 module Lua
   class Stack
+    include StackMixin::Registry
+    include StackMixin::Type
+    include StackMixin::Table
+
     getter! state
 
     # Initializes new Lua stack running in a new, independent state.
@@ -45,12 +51,12 @@ module Lua
       when Char             then LibLua.pushstring(@state, o.to_s)
       when String           then LibLua.pushstring(@state, o)
       when Symbol           then LibLua.pushstring(@state, o.to_s)
-      when Array, Tuple     then push(o.to_a)
-      when Hash, NamedTuple then push(o.to_h)
+      when Array, Tuple     then createtable(o.to_a)
+      when Hash, NamedTuple then createtable(o.to_h)
         # TODO: Proc
       else
         o.responds_to?(:to_lua) ? o.to_lua(@state) : raise ArgumentError.new(
-          "unable to pass Crystal object of type #{typeof(o)} to Lua"
+          "unable to pass Crystal object of type '#{typeof(o)}' to Lua"
         )
       end
     end
@@ -68,17 +74,17 @@ module Lua
       return nil if pos == 0
 
       case type_at(pos)
-      when Type::TNIL, Type::TNONE then nil
-      when Type::TBOOLEAN          then LibLua.toboolean(@state, pos) == 1
-      when Type::TNUMBER           then LibLua.tonumberx(@state, pos, nil)
-      when Type::TSTRING           then String.new LibLua.tolstring(@state, pos, nil)
-      when Type::TTABLE            then Table.new self, reference(pos)
-      when Type::TFUNCTION         then nil # TBD
-      when Type::TUSERDATA         then nil # TBD
-      when Type::TTHREAD           then nil # TBD
-      when Type::TLIGHTUSERDATA    then nil # TBD
+      when TYPE::TNIL, TYPE::TNONE then nil
+      when TYPE::TBOOLEAN          then LibLua.toboolean(@state, pos) == 1
+      when TYPE::TNUMBER           then LibLua.tonumberx(@state, pos, nil)
+      when TYPE::TSTRING           then String.new LibLua.tolstring(@state, pos, nil)
+      when TYPE::TTABLE            then Table.new self, reference(pos)
+      when TYPE::TFUNCTION         then nil # TBD
+      when TYPE::TUSERDATA         then nil # TBD
+      when TYPE::TTHREAD           then nil # TBD
+      when TYPE::TLIGHTUSERDATA    then nil # TBD
       else
-        raise ArgumentError.new "unable to detect type of the object to fetch"
+        raise Exception.new "unable to map Lua type '#{type_at(pos)}'"
       end
     end
 
@@ -146,66 +152,6 @@ module Lua
     # ```
     def pop
       top.try &.tap { LibLua.settop(@state, -2) }
-    end
-
-    # Returns type at `pos` in the stack.
-    #
-    # ```
-    # stack = Lua::Stack.new
-    # stack << "hello"
-    # stack.type_at(1) # => TSTRING
-    # ```
-    def type_at(pos : Int)
-      Type.new LibLua.type(@state, pos)
-    end
-
-    # Returns name of the type at `pos` in the stack.
-    #
-    # ```
-    # stack = Lua::Stack.new
-    # stack << "my_super_string"
-    # stack << 42
-    # stack.typename(1) # => "string"
-    # stack.typename(2) # => "number"
-    # ```
-    def typename(pos : Int)
-      typename type_at(pos)
-    end
-
-    # Returns name of the `type`.
-    #
-    # ```
-    # stack = Lub::Stack.new
-    # stack.typename(Type::TBOOLEAN) # => "boolean"
-    # ```
-    def typename(type : Type)
-      String.new LibLua.typename(@state, type.value)
-    end
-
-    # Creates a reference in registry to object at `pos` is a stack.
-    # It copies a value to stack top, places top element to registry
-    # and removes it from the stack. Returns a reference.
-    def reference(pos)
-      LibLua.pushvalue(@state, pos)
-      LibLua.l_ref(@state, Option::REGISTRYINDEX)
-    end
-
-    private def push(a : Array)
-      h = a.map_with_index { |e, i| [i + 1, e] }.to_h
-      table h, a.size, 0
-    end
-
-    private def push(a : Hash)
-      table a, 0, a.size
-    end
-
-    private def table(a : Hash, narr : Int, nrec : Int)
-      LibLua.createtable(@state, narr, nrec)
-      a.each do |k, v|
-        self << k
-        self << v
-        LibLua.settable(@state, -3)
-      end
     end
   end
 end

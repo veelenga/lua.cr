@@ -12,12 +12,6 @@ lib LibLua
   alias Writer = (State, Void*, LibC::SizeT, Void* -> LibC::Int)
   alias Hook = (State, Debug* -> Void)
 
-  enum Option
-    REFNIL        =       -1
-    NOREF         =       -2
-    REGISTRYINDEX = -1001000
-  end
-
   struct Debug
     event : LibC::Int
     name : LibC::Char*
