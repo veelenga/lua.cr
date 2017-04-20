@@ -105,11 +105,13 @@ module Lua
     #
     def to_s(io : IO)
       io << String.build do |acc|
-        (1..size).reverse_each do |pos|
+        l = size
+        pad = Math.log10(l).to_i + 1
+        (1..l).reverse_each do |pos|
           type = type_at(pos)
           name = typename(type)
 
-          acc << "#{pos} : #{type}(#{name}) #{self[pos]}\n"
+          acc << "#{pos.to_s.rjust(pad)} : #{type}(#{name}) #{self[pos]}\n"
         end
       end.strip
     end

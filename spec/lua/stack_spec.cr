@@ -83,12 +83,16 @@ module Lua
 
     describe "#to_s" do
       it "represents the stack as a string" do
-        stack = Lua::Stack.new.tap do |s|
+        stack = Stack.new.tap do |s|
           s << 42.24
           s << false
           s << "hello!"
         end
         stack.to_s.should eq "3 : TSTRING(string) hello!\n2 : TBOOLEAN(boolean) false\n1 : TNUMBER(number) 42.24"
+      end
+
+      it "returns empty string when stack is empty" do
+        Stack.new.to_s.should eq ""
       end
     end
 
