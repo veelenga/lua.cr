@@ -130,6 +130,11 @@ module Lua
         t = table({1.0 => "a", "io" => "b", :gog => "c"})
         t.to_h.should eq({"gog" => "c", 1.0 => "a", "io" => "b"})
       end
+
+      it "returns empty hash if table is empty" do
+        t = table([] of String)
+        t.to_h.should eq({} of LuaType => LuaType)
+      end
     end
 
     describe "#to_s" do
