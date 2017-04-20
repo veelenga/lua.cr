@@ -19,6 +19,7 @@ module Lua
     # stack << 42
     # stack.typename(1) # => "string"
     # stack.typename(2) # => "number"
+    # stack.typename(3) # => "no value"
     # ```
     def typename(pos : Int)
       typename type_at(pos)

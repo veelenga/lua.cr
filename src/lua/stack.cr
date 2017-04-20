@@ -51,8 +51,8 @@ module Lua
       when Char             then LibLua.pushstring(@state, o.to_s)
       when String           then LibLua.pushstring(@state, o)
       when Symbol           then LibLua.pushstring(@state, o.to_s)
-      when Array, Tuple     then createtable(o.to_a)
-      when Hash, NamedTuple then createtable(o.to_h)
+      when Array, Tuple     then pushtable(o.to_a)
+      when Hash, NamedTuple then pushtable(o.to_h)
         # TODO: Proc
       else
         o.responds_to?(:to_lua) ? o.to_lua(@state) : raise ArgumentError.new(

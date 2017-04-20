@@ -3,7 +3,7 @@ module Lua
     include Enumerable({LuaType, LuaType})
     include Iterable({LuaType, LuaType})
 
-    # Sets value to index in a table.
+    # Sets a new value at index into a table.
     #
     # ```
     # t[3] = "test"
@@ -17,8 +17,7 @@ module Lua
       end
     end
 
-    # Returns the value placed at index
-    # or nil if there is no such value.
+    # Returns the value at index or nil if there is no value at all.
     #
     # ```
     # t[2] = "test"
@@ -36,12 +35,12 @@ module Lua
     # [next](http://www.lua.org/manual/5.3/manual.html#pdf-next).
     #
     # ```
-    # t[1] = '1'
-    # t[2] = '2'
-    # t[3] = '3'
+    # t[1] = "1"
+    # t[2] = "2"
+    # t[3] = "3"
     # t.each do |k, v|
     #   k # => 1.0, 2.0, 3.0 (represents table index)
-    #   v # => '1', '2', '3' (represents table value)
+    #   v # => "1", "2", "3" (represents table value)
     # end
     # ```
     def each : Nil
@@ -55,6 +54,14 @@ module Lua
       end
     end
 
+    # Converts this table to Crystal hash.
+    #
+    # ```
+    # t[1] = "a"
+    # t["io"] = "b"
+    # t[:gog] = "c"
+    # t.to_h # => {"gog" => "c", 1.0 => "a", "io" => "b"}
+    # ```
     def to_h
       self.each_with_object({} of LuaType => LuaType) do |pair, o|
         k, v = pair
@@ -66,7 +73,7 @@ module Lua
     #
     # ```
     # t      # => [1.1, 2.1, 3.1]
-    # t.to_s # => { 1.0 => 1.1 } { 2.0 => 2.1 } { 3.0 => 3.1 }
+    # t.to_s # => {1.0 => 1.0, 2.0 => 2.1, 3.0 => 3.2}
     # ```
     def to_s(io : IO)
       to_h.to_s io
