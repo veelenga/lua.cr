@@ -11,9 +11,9 @@ module Lua
     #   return double(double(2))
     # } # => 8
     # ```
-    def run(buff : String) : LuaType
+    def run(buff : String)
       LibLua.l_loadbufferx @state, buff, buff.size, "lua_code_chunk", nil
-      call_and_return(size - 1).try &.first
+      call_and_return size
     end
 
     # Evaluates a Lua chunk in a file and returns the result if any.
@@ -22,16 +22,20 @@ module Lua
     # Stack.new.runfile("./sample.lua")
     # ```
     def runfile(path_to_lua_file : String)
+      # TODO: check loadfilex result to ensure file has been loaded properly
       LibLua.l_loadfilex @state, path_to_lua_file, nil
-      call_and_return(size - 1).try &.first
+      call_and_return size
     end
 
-    private def call_and_return(initial_size, *args)
+    protected def call_and_return(initial_size, *args)
       args.each { |a| self.<< a }
       LibLua.pcallk @state, args.size, Lua::MULTRET, 1, -1, nil
 
-      elements = (initial_size...size).map { pop }
-      elements.any? ? elements : nil
+      elements = ((initial_size - 1)...size).map { pop }
+
+      return nil unless elements.any?
+      return elements.first if elements.size == 1
+      elements
     end
   end
 end

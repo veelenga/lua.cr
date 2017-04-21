@@ -80,7 +80,7 @@ module Lua
       when TYPE::TNUMBER           then LibLua.tonumberx(@state, pos, nil)
       when TYPE::TSTRING           then String.new LibLua.tolstring(@state, pos, nil)
       when TYPE::TTABLE            then Table.new self, reference(pos)
-      when TYPE::TFUNCTION         then nil # TBD
+      when TYPE::TFUNCTION         then Function.new self, reference(pos)
       when TYPE::TUSERDATA         then nil # TBD
       when TYPE::TTHREAD           then nil # TBD
       when TYPE::TLIGHTUSERDATA    then nil # TBD
