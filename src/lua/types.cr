@@ -19,4 +19,6 @@ module Lua
     NOREF         =       -2
     REGISTRYINDEX = -1001000
   end
+
+  MULTRET = -1
 end
