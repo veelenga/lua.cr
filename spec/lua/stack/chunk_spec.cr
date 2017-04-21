@@ -40,7 +40,7 @@ module Lua::StackMixin
             return x + y
           end
           return sum
-        }).should eq nil # function
+        }).is_a?(Function).should be_true
       end
     end
 
