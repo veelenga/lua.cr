@@ -19,11 +19,11 @@ module Lua
     # Evaluates a Lua chunk in a file and returns the result if any.
     #
     # ```
-    # Stack.new.runfile("./sample.lua")
+    # Stack.new.run File.new("./sample.lua")
     # ```
-    def runfile(path_to_lua_file : String)
+    def run(lua_file : File)
       # TODO: check loadfilex result to ensure file has been loaded properly
-      LibLua.l_loadfilex @state, path_to_lua_file, nil
+      LibLua.l_loadfilex @state, lua_file.path, nil
       call_and_return size
     end
 

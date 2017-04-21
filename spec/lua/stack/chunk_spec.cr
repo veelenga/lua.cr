@@ -44,14 +44,14 @@ module Lua::StackMixin
       end
     end
 
-    describe "#runfile" do
+    describe "#run" do
       it "loads lua chunk from file" do
-        Stack.new.runfile("spec/fixtures/sample.lua").should eq 23
+        Stack.new.run(File.new "spec/fixtures/sample.lua").should eq 23
       end
 
       it "removes chunk and results from the stack" do
         s = Stack.new.tap(&.<< false)
-        s.runfile("spec/fixtures/sample.lua")
+        s.run("spec/fixtures/sample.lua")
         s.size.should eq 1
         s[1].should eq false
       end
