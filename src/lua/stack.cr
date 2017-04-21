@@ -5,6 +5,7 @@ module Lua
     include StackMixin::Registry
     include StackMixin::Type
     include StackMixin::Table
+    include StackMixin::Chunk
 
     getter! state
 

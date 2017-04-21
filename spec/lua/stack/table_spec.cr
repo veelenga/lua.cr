@@ -1,3 +1,5 @@
+require "../../spec_helper"
+
 module Lua::StackMixin
   describe Table do
     describe "#pushtable" do

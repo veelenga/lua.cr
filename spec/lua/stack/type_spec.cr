@@ -1,3 +1,5 @@
+require "../../spec_helper"
+
 module Lua::StackMixin
   describe Type do
     describe "#type_at" do
