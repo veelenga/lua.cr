@@ -5,7 +5,7 @@ module Lua
     # and removes it from the stack. Returns a reference.
     def reference(pos)
       LibLua.pushvalue(@state, pos)
-      LibLua.l_ref(@state, OPTION::REGISTRYINDEX)
+      LibLua.l_ref(@state, Lua::REGISTRYINDEX)
     end
   end
 end

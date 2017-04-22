@@ -14,11 +14,9 @@ module Lua
     TTHREAD        =  8
   end
 
-  enum OPTION
-    REFNIL        =       -1
-    NOREF         =       -2
-    REGISTRYINDEX = -1001000
-  end
+  REFNIL        =       -1
+  NOREF         =       -2
+  REGISTRYINDEX = -1001000
 
   MULTRET = -1
 end
