@@ -31,7 +31,7 @@ module Lua::StackMixin
         s = Stack.new
         s.run(%q{ return nil }).should eq nil
         s.run(%q{ return "a" }).should eq "a"
-        s.run(%q{ return false }).should eq nil
+        s.run(%q{ return false }).should eq false
         s.run(%q{ return true }).should eq true
         s.run(%q{ return 100 }).should eq 100
         s.run(%q{ a = {}; a[1] = "a"; return a }).as(Lua::Table)[1].should eq "a"

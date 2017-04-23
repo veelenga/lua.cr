@@ -28,14 +28,16 @@ module Lua
     end
 
     protected def call_and_return(initial_size, *args)
+      # set handler just below the chunk
+      error_handler = self.load_error_handler initial_size
+
       args.each { |a| self.<< a }
-      LibLua.pcallk @state, args.size, Lua::MULTRET, 1, -1, nil
+      LibLua.pcallk @state, args.size, Lua::MULTRET, 1, error_handler, nil
 
-      elements = ((initial_size - 1)...size).map { pop }
-
-      return nil unless elements.any?
-      return elements.first if elements.size == 1
-      elements
+      elements = (initial_size..size).map { pop }
+      elements.size > 1 ? elements : elements.first?
+    ensure
+      self.pop if error_handler != 0 # remove the error handler
     end
   end
 end
