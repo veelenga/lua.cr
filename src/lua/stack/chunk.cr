@@ -12,7 +12,7 @@ module Lua
     # } # => 8
     # ```
     def run(buff : String)
-      LibLua.l_loadbufferx @state, buff, buff.size, "lua_code_chunk", nil
+      LibLua.l_loadbufferx @state, buff, buff.size, "lua_chunk", nil
       call_and_return size
     end
 
@@ -27,15 +27,19 @@ module Lua
       call_and_return size
     end
 
-    protected def call_and_return(initial_size, *args)
+    protected def call_and_return(chunk_pos, *args)
+      # loads handler just below the chunk
+      error_handler_pos = self.load_error_handler chunk_pos
+      chunk_pos += 1 if error_handler_pos != 0
+
       args.each { |a| self.<< a }
-      LibLua.pcallk @state, args.size, Lua::MULTRET, 1, -1, nil
+      call = CALL.new LibLua.pcallk(@state, args.size, Lua::MULTRET, 1, error_handler_pos, nil)
+      raise self.error(call, pop.as(Lua::Table).to_h) if call != CALL::OK
 
-      elements = ((initial_size - 1)...size).map { pop }
-
-      return nil unless elements.any?
-      return elements.first if elements.size == 1
-      elements
+      elements = (chunk_pos..size).map { pop }
+      elements.size > 1 ? elements : elements.first?
+    ensure
+      self.pop if error_handler_pos != 0 # removes the handler
     end
   end
 end

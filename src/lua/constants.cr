@@ -19,4 +19,12 @@ module Lua
   REGISTRYINDEX = -1001000
 
   MULTRET = -1
+
+  enum CALL
+    OK      = 0
+    ERRRUN  = 2
+    ERRMEM  = 4
+    ERRGCMM = 5
+    ERRERR  = 6
+  end
 end

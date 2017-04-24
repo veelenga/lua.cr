@@ -2,10 +2,11 @@ require "./stack/*"
 
 module Lua
   class Stack
-    include StackMixin::Registry
     include StackMixin::Type
     include StackMixin::Table
     include StackMixin::Chunk
+    include StackMixin::Registry
+    include StackMixin::ErrorHandling
 
     getter! state
 
@@ -21,9 +22,15 @@ module Lua
     def initialize
       @state = LibLua.l_newstate
       LibLua.l_openlibs(@state)
+
+      set_error_handler %q{
+        return function(e)
+          return { message = e, traceback = debug.traceback() }
+        end
+      }
     end
 
-    # Destroys all objects in the given Lua state
+    # Destroys all objects in the given Lua state.
     #
     # ```
     # stack = Lua::Stack.new
