@@ -27,18 +27,19 @@ module Lua
       call_and_return size
     end
 
-    protected def call_and_return(initial_size, *args)
-      # set handler just below the chunk
-      error_handler = self.load_error_handler initial_size
+    protected def call_and_return(chunk_pos, *args)
+      # loads handler just below the chunk
+      error_handler_pos = self.load_error_handler chunk_pos
+      chunk_pos += 1 if error_handler_pos != 0
 
       args.each { |a| self.<< a }
-      call = CALL.new LibLua.pcallk(@state, args.size, Lua::MULTRET, 1, error_handler, nil)
-      raise self.error(call) if call != CALL::OK
+      call = CALL.new LibLua.pcallk(@state, args.size, Lua::MULTRET, 1, error_handler_pos, nil)
+      raise self.error(call, pop.as(Lua::Table).to_h) if call != CALL::OK
 
-      elements = (initial_size..size).map { pop }
+      elements = (chunk_pos..size).map { pop }
       elements.size > 1 ? elements : elements.first?
     ensure
-      self.pop if error_handler != 0 # remove the error handler
+      self.pop if error_handler_pos != 0 # removes the handler
     end
   end
 end

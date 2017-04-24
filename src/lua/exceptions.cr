@@ -1,6 +1,8 @@
 module Lua
   class LuaError < Exception
-    def initialize(@message : String = message)
+    getter traceback
+
+    def initialize(@message = message, @traceback : String? = traceback)
     end
   end
 
