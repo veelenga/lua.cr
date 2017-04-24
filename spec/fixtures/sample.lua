@@ -10,4 +10,4 @@ function maximum (a)
   return m, mi
 end
 
-return(maximum({8,10,23,12,5}))     --> 23   3
+return(maximum({8,10,23,12,5})) --> 23, 3

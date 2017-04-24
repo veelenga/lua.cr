@@ -51,7 +51,7 @@ module Lua::StackMixin
 
       it "removes chunk and results from the stack" do
         s = Stack.new.tap(&.<< false)
-        s.run("spec/fixtures/sample.lua")
+        s.run File.new("spec/fixtures/sample.lua")
         s.size.should eq 1
         s[1].should eq false
       end

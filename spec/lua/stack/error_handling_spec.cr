@@ -6,12 +6,13 @@ module Lua::StackMixin
       it "sets the Lua error handler by lua chunk" do
         stack = Stack.new.tap &.set_error_handler %q{
           return function(e)
-            return("something went wrong: " .. e)
+            return e
           end
         }
 
-        stack.run "raise('Blah!')"
-        # TODO:
+        expect_raises RuntimeError, "attempt to call a nil value (global 'raise')" do
+          stack.run "raise('Blah!')"
+        end
       end
     end
   end

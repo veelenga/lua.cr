@@ -12,7 +12,7 @@ module Lua
     # } # => 8
     # ```
     def run(buff : String)
-      LibLua.l_loadbufferx @state, buff, buff.size, "lua_code_chunk", nil
+      LibLua.l_loadbufferx @state, buff, buff.size, "lua_chunk", nil
       call_and_return size
     end
 
@@ -32,7 +32,8 @@ module Lua
       error_handler = self.load_error_handler initial_size
 
       args.each { |a| self.<< a }
-      LibLua.pcallk @state, args.size, Lua::MULTRET, 1, error_handler, nil
+      call = CALL.new LibLua.pcallk(@state, args.size, Lua::MULTRET, 1, error_handler, nil)
+      raise self.error(call) if call != CALL::OK
 
       elements = (initial_size..size).map { pop }
       elements.size > 1 ? elements : elements.first?

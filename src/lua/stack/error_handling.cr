@@ -20,6 +20,17 @@ module Lua::StackMixin
       end
     end
 
+    protected def error(type : CALL, message = self.pop.as(String))
+      case type
+      when CALL::ERRRUN  then RuntimeError.new message
+      when CALL::ERRMEM  then MemoryError.new message
+      when CALL::ERRGCMM then GCError.new message
+      when CALL::ERRERR  then ErrorHandlerError.new message
+      else
+        LuaError.new message
+      end
+    end
+
     # Loads handler onto the stack at the given position.
     # Returns 0 if handler not loaded.
     #
