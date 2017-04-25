@@ -172,7 +172,22 @@ module Lua
     # stack.size # => 0
     # ```
     def pop
-      top.try &.tap { LibLua.settop(@state, -2) }
+      top.try &.tap { remove }
+    end
+
+    # Removes n elements from the stack.
+    #
+    # ```
+    # stack = Lua::Stak.new
+    # stack << "a"
+    # stack << "b"
+    # stack << "c"
+    # stack.remove(2) # => nil
+    # stack.size      # => 1
+    # ```
+    def remove(n : Int = 1)
+      n = n < 0 ? 0 : [n, size].min
+      LibLua.settop(@state, -n - 1)
     end
   end
 end

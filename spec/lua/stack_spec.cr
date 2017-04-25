@@ -141,5 +141,46 @@ module Lua
         Stack.new.pop.should eq nil
       end
     end
+
+    describe "#remove" do
+      it "removes element from the top of the stack and does not return it" do
+        Stack.new.tap(&.<< 100).remove.should eq nil
+      end
+
+      it "can remove n elements" do
+        stack = Stack.new.tap do |s|
+          s << 1
+          s << 3
+          s << 5
+        end
+        stack.remove(2).should eq nil
+        stack.size.should eq 1
+      end
+
+      it "can remove all elements from the stack" do
+        stack = Stack.new.tap do |s|
+          s << :"1"
+          s << :"3"
+          s << :"5"
+        end
+        stack.remove(stack.size).should eq nil
+        stack.size.should eq 0
+      end
+
+      it "removes all elements from the stack if n is bigger than size" do
+        stack = Stack.new.tap do |s|
+          s << :"1"
+          s << :"3"
+        end
+        stack.remove(100)
+        stack.size.should eq 0
+      end
+
+      it "does not remove elements if n is less than 0" do
+        stack = Stack.new.tap &.<< "a"
+        stack.remove -100
+        stack.size.should eq 1
+      end
+    end
   end
 end

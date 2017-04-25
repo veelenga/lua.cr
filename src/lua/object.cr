@@ -12,7 +12,7 @@ module Lua
       copy_to_stack if ref
       yield @stack.size
     ensure
-      @stack.pop if ref
+      @stack.remove if ref
     end
 
     protected def copy_to_stack

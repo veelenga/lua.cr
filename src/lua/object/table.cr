@@ -49,7 +49,7 @@ module Lua
         while (LibLua.next(@stack.state, pos) != 0)
           k, v = @stack[-2], @stack[-1]
           yield({k, v})
-          @stack.pop
+          @stack.remove
         end
       end
     end

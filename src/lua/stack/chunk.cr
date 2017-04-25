@@ -39,7 +39,7 @@ module Lua
       elements = (chunk_pos..size).map { pop }
       elements.size > 1 ? elements : elements.first?
     ensure
-      self.pop if error_handler_pos != 0 # removes the handler
+      self.remove if error_handler_pos != 0 # removes the handler
     end
   end
 end
