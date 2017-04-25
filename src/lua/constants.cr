@@ -21,10 +21,13 @@ module Lua
   MULTRET = -1
 
   enum CALL
-    OK      = 0
-    ERRRUN  = 2
-    ERRMEM  = 4
-    ERRGCMM = 5
-    ERRERR  = 6
+    OK        = 0
+    YIELD     = 1
+    ERRRUN    = 2
+    ERRSYNTAX = 3
+    ERRMEM    = 4
+    ERRGCMM   = 5
+    ERRERR    = 6
+    ERRFILE   = 7
   end
 end

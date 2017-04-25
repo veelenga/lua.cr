@@ -1,10 +1,19 @@
 require "../../spec_helper"
+require "tempfile"
 
 module Lua::StackMixin
   describe ErrorHandling do
-    it "cat catch lua syntax error" do
+    it "can catch lua runtime error" do
       expect_raises RuntimeError, "attempt to call a nil value (global 'raise')" do
         Lua.run "raise('Blah!')"
+      end
+    end
+
+    it "can catch lua syntax error" do
+      expect_raises SyntaxError, %q[unexpected symbol near '"a"'] do
+        Lua.run %q{
+          "a" * 3
+        }
       end
     end
 
@@ -16,6 +25,15 @@ module Lua::StackMixin
           end
           s()
         }
+      end
+    end
+
+    it "can catch lua file error" do
+      tempfile = Tempfile.open("foo") { }
+      invalid_file = File.new tempfile.path
+      tempfile.unlink
+      expect_raises FileError, "cannot open #{invalid_file.path}" do
+        Lua.load.run invalid_file
       end
     end
 

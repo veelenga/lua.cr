@@ -12,7 +12,8 @@ module Lua
     # } # => 8
     # ```
     def run(buff : String)
-      LibLua.l_loadbufferx @state, buff, buff.size, "lua_chunk", nil
+      call = CALL.new LibLua.l_loadbufferx @state, buff, buff.size, "lua_chunk", nil
+      raise self.error(call, pop.as(String)) if call != CALL::OK
       call_and_return size
     end
 
@@ -22,8 +23,8 @@ module Lua
     # Stack.new.run File.new("./sample.lua")
     # ```
     def run(lua_file : File)
-      # TODO: check loadfilex result to ensure file has been loaded properly
-      LibLua.l_loadfilex @state, lua_file.path, nil
+      call = CALL.new LibLua.l_loadfilex @state, lua_file.path, nil
+      raise self.error(call, pop.as(String)) if call != CALL::OK
       call_and_return size
     end
 
