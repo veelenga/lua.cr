@@ -31,10 +31,12 @@ module Lua
 
       if @libs.includes?(:debug)
         set_error_handler %q{
-          return function(e)
+          function(e)
             return { message = e, traceback = debug.traceback() }
           end
         }
+      else
+        set_error_handler "function(e) return { message = e } end"
       end
     end
 

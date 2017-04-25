@@ -37,7 +37,7 @@ module Lua::StackMixin
             LibLua.l_requiref(@state, {{name}}.to_s, ->(l : LibLua::State) { LibLua.open_{{name.id}}(l) }, 1)
         {% end %}
       else
-        raise ArgumentError.new "unable to load '#{{{library}}}' lib. Use one of the following: #{MODULES.join(", ")}"
+        raise ArgumentError.new "unable to load '#{{{library}}}' lib. Try one of the following: #{MODULES.join(", ")}"
       end
       pop
     end
