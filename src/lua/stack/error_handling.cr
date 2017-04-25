@@ -7,12 +7,13 @@ module Lua::StackMixin
     #
     # ```
     # stack.set_error_handler %q{
-    #   return function(e)
+    #   function(e)
     #     print("error happened: " .. e)
     #   end
     # }
     # ```
     protected def set_error_handler(chunk : String)
+      chunk = "return " + chunk unless chunk.match /^return\s+/
       if (res = run chunk).is_a?(Function)
         @error_handler = res
       else
@@ -45,7 +46,7 @@ module Lua::StackMixin
     #
     # ```
     # stack.set_error_handler %q{
-    #   return function(e)
+    #   function(e)
     #     print("error happened: " .. e)
     #   end
     # }

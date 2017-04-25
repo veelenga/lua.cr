@@ -7,27 +7,37 @@ module Lua
     include StackMixin::Chunk
     include StackMixin::Registry
     include StackMixin::ErrorHandling
+    include StackMixin::StandardLibraries
 
-    getter! state
+    getter state
+    getter libs = Set(Symbol).new
 
     # Initializes new Lua stack running in a new, independent state.
     # Has to be closed to call the corresponding garbage-collection
     # metamethods on Lua side.
+    #
+    # By default it loads all standard libraries. But that's possible to
+    # load only a subset of them using `libs` named parameter. If you
+    # pass nil as `libs` parameter, any of standard libraries will be loaded.
     #
     # ```
     # stack = Lua::Stack.new
     # # ...
     # stack.close
     # ```
-    def initialize
+    def initialize(libs = :all)
       @state = LibLua.l_newstate
-      LibLua.l_openlibs(@state)
+      open_libs(libs)
 
-      set_error_handler %q{
-        return function(e)
-          return { message = e, traceback = debug.traceback() }
-        end
-      }
+      if @libs.includes?(:debug)
+        set_error_handler %q{
+          function(e)
+            return { message = e, traceback = debug.traceback() }
+          end
+        }
+      else
+        set_error_handler "function(e) return { message = e } end"
+      end
     end
 
     # Destroys all objects in the given Lua state.
@@ -39,6 +49,7 @@ module Lua
     # ```
     def close
       LibLua.close @state
+      @libs.clear
     end
 
     # Adds Crystal object to Lua stack.
