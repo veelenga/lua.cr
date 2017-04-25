@@ -2,6 +2,24 @@ require "../spec_helper"
 
 module Lua
   describe Stack do
+    describe ".new" do
+      it "loads all modules" do
+        Stack.new.libs.to_a.should eq StackMixin::StandardLibraries::MODULES
+      end
+
+      it "sets error handler" do
+        expect_raises LuaError do
+          Stack.new.run "wrong!"
+        end
+      end
+
+      it "sets error handler if libs not loaded" do
+        expect_raises LuaError do
+          Stack.new(libs = nil).run "wrong again!"
+        end
+      end
+    end
+
     describe "#<<" do
       it "can push nil value" do
         Stack.new.tap(&.<< nil)[1].should eq nil
