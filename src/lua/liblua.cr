@@ -36,6 +36,18 @@ lib LibLua
   fun l_loadstring = luaL_loadstring(l : State, s : LibC::Char*) : LibC::Int
   fun l_loadfilex = luaL_loadfilex(l : State, filename : LibC::Char*, mode : LibC::Char*) : LibC::Int
   fun l_loadbufferx = luaL_loadbufferx(l : State, buff : LibC::Char*, sz : LibC::SizeT, name : LibC::Char*, mode : LibC::Char*) : LibC::Int
+  fun l_requiref = luaL_requiref(l : State, modname : LibC::Char*, openf : CFunction, glb : LibC::Int)
+
+  fun open_base = luaopen_base(l : State) : LibC::Int
+  fun open_package = luaopen_package(l : State) : LibC::Int
+  fun open_coroutine = luaopen_coroutine(l : State) : LibC::Int
+  fun open_table = luaopen_table(l : State) : LibC::Int
+  fun open_io = luaopen_io(l : State) : LibC::Int
+  fun open_os = luaopen_os(l : State) : LibC::Int
+  fun open_string = luaopen_string(l : State) : LibC::Int
+  fun open_math = luaopen_math(l : State) : LibC::Int
+  fun open_utf8 = luaopen_utf8(l : State) : LibC::Int
+  fun open_debug = luaopen_debug(l : State) : LibC::Int
 
   fun pushnil = lua_pushnil(l : State)
   fun pushnumber = lua_pushnumber(l : State, n : Number)
