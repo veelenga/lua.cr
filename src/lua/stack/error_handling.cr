@@ -38,12 +38,12 @@ module Lua::StackMixin
       message = err["message"]?.try &.as(String)
       traceback = err["traceback"]?.try &.as(String)
       case type
-      when CALL::ERRRUN    then RuntimeError.new message, traceback
-      when CALL::ERRSYNTAX then SyntaxError.new message, traceback
-      when CALL::ERRMEM    then MemoryError.new message, traceback
-      when CALL::ERRGCMM   then GCError.new message, traceback
-      when CALL::ERRERR    then ErrorHandlerError.new message, traceback
-      when CALL::ERRFILE   then FileError.new message, traceback
+      when .errrun?    then RuntimeError.new message, traceback
+      when .errsyntax? then SyntaxError.new message, traceback
+      when .errmem?    then MemoryError.new message, traceback
+      when .errgcmm?   then GCError.new message, traceback
+      when .errerr?    then ErrorHandlerError.new message, traceback
+      when .errfile?   then FileError.new message, traceback
       else
         LuaError.new message, traceback
       end
