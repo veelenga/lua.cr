@@ -1,6 +1,7 @@
 module Lua
   module StackMixin::Chunk
     # Evaluates a Lua chunk and returns the result if any.
+    # You can set the name of your chunk using `name` var.
     #
     # ```
     # Stack.new.run %q{
@@ -11,8 +12,8 @@ module Lua
     #   return double(double(2))
     # } # => 8
     # ```
-    def run(buff : String)
-      call = CALL.new LibLua.l_loadbufferx @state, buff, buff.size, "lua_chunk", nil
+    def run(buff : String, name = "lua_chunk")
+      call = CALL.new LibLua.l_loadbufferx @state, buff, buff.size, name, nil
       raise self.error(call, pop.as(String)) if call != CALL::OK
       call_and_return size
     end
