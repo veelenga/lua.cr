@@ -3,6 +3,7 @@ require "./stack/*"
 module Lua
   class Stack
     include StackMixin::Type
+    include StackMixin::Util
     include StackMixin::Table
     include StackMixin::Chunk
     include StackMixin::Registry
@@ -27,6 +28,8 @@ module Lua
     # ```
     def initialize(libs = :all)
       @state = LibLua.l_newstate
+      check_lua_supported
+
       open_libs(libs)
 
       if @libs.includes?(:debug)
