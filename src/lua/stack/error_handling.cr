@@ -22,21 +22,25 @@ module Lua::StackMixin
     end
 
     # The same as `ErrorHandling#error(type, err)` method
-    # but accepts only string `message` instead of `err`.
-    protected def error(type, message : String)
-      error type, {"message" => message}
+    # but tryies to infer `err`.
+    protected def error(type, err)
+      case err
+      when String then error type, err, nil
+      when Table
+        error type, err["message"].as(String?), err["traceback"].as(String?)
+      else
+        error type
+      end
     end
 
     # Instantiates and returns a Lua error object based on
-    # provided error type. The second parameter represents an
-    # error object (hash), which holds message and backtrace from Lua.
+    # provided error type. `message` and `traceback` parameters
+    # represents error message and lua traceback accordingly.
     #
     # ```
     # stack.error CALL::ERRRUN # => returns new RuntimeError object
     # ```
-    protected def error(type, err)
-      message = err["message"]?.try &.as(String)
-      traceback = err["traceback"]?.try &.as(String)
+    protected def error(type, message : String? = nil, traceback : String? = nil)
       case type
       when .errrun?    then RuntimeError.new message, traceback
       when .errsyntax? then SyntaxError.new message, traceback

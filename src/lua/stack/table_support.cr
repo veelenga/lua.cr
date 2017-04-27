@@ -1,5 +1,5 @@
 module Lua
-  module StackMixin::Table
+  module StackMixin::TableSupport
     # Pushes array to the stack. Converts it to Lua table.
     #
     # ```
