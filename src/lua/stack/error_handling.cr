@@ -14,7 +14,7 @@ module Lua::StackMixin
     # ```
     protected def set_error_handler(chunk : String)
       chunk = "return " + chunk unless chunk.match /^return\s+/
-      if (res = run chunk).is_a?(Function)
+      if (res = run chunk, "error handler").is_a?(Function)
         @error_handler = res
       else
         raise ArgumentError.new("lua chunk need to return a function:\n #{chunk}")
