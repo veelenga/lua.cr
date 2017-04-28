@@ -140,7 +140,7 @@ module Lua
     describe "#to_s" do
       it "print keys and values" do
         t = Stack.new.tap(&.<< [1.0, 2.1, 3.2])[1].as(Table)
-        t.to_s.should eq "#(3) {1.0 => 1.0, 2.0 => 2.1, 3.0 => 3.2}"
+        t.to_s.should eq "size:3, {1.0 => 1.0, 2.0 => 2.1, 3.0 => 3.2}"
       end
     end
   end

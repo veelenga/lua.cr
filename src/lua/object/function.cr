@@ -20,5 +20,13 @@ module Lua
         @stack.call_and_return pos, *args
       end
     end
+
+    # String representation of function.
+    # Contains number of arguments and function Lua source.
+    def to_s(io)
+      copy_to_stack
+      info = @stack.getinfo(">Su")
+      io << "argsize:#{info.nparams}, #{String.new info.source}"
+    end
   end
 end

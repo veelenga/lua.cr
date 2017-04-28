@@ -84,7 +84,7 @@ module Lua
       h = first(5).to_h.to_s
       h = h.gsub "}", " ...}" if n > 5
 
-      io << "#(#{n}) #{h}"
+      io << "size:#{n}, #{h}"
     end
   end
 end
