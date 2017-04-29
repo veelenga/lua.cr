@@ -26,8 +26,10 @@ module Lua
     def to_s(io)
       copy_to_stack
       info = @stack.getinfo(">Su")
-      source = String.new(info.source).gsub(/^return /, "")[0, 20].rstrip + "..."
-      io << "argsize:#{info.nparams}, #{source}"
+      source = String.new info.source
+      chunk = source.gsub(/^return /, "")[0, 20].rstrip
+      chunk = "#{chunk}..." if chunk.size < source.size
+      io << "argsize:#{info.nparams}, #{chunk}"
     end
   end
 end
