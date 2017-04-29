@@ -31,18 +31,8 @@ module Lua
       end
     end
 
-    # Traverses a table in Lua stack using
+    # Implements enumerator. Traverses a table in Lua stack using
     # [next](http://www.lua.org/manual/5.3/manual.html#pdf-next).
-    #
-    # ```
-    # t[1] = "1"
-    # t[2] = "2"
-    # t[3] = "3"
-    # t.each do |k, v|
-    #   k # => 1.0, 2.0, 3.0 (represents table index)
-    #   v # => "1", "2", "3" (represents table value)
-    # end
-    # ```
     def each : Nil
       preload do |pos|
         @stack << nil
@@ -50,6 +40,20 @@ module Lua
           k, v = @stack[-2], @stack[-1]
           yield({k, v})
           @stack.remove
+        end
+      end
+    end
+
+    # Implements iterator. Traverses a table in Lua stack using
+    # [next](http://www.lua.org/manual/5.3/manual.html#pdf-next).
+    # ```
+    def next
+      preload do |pos|
+        @stack << nil
+        if LibLua.next(@stack.state, pos) != 0
+          {@stack[-2], @stack[-1]}.tap { @stack.remove }
+        else
+          stop
         end
       end
     end
@@ -63,7 +67,7 @@ module Lua
     # t.to_h # => {"gog" => "c", 1.0 => "a", "io" => "b"}
     # ```
     def to_h
-      self.each_with_object({} of LuaType => LuaType) do |pair, o|
+      each_with_object({} of LuaType => LuaType) do |pair, o|
         k, v = pair
         o[k] = v
       end
@@ -73,10 +77,14 @@ module Lua
     #
     # ```
     # t      # => [1.1, 2.1, 3.1]
-    # t.to_s # => {1.0 => 1.0, 2.0 => 2.1, 3.0 => 3.2}
+    # t.to_s # => #3 {1.0 => 1.1, 2.0 => 2.1, 3.0 => 3.1}
     # ```
     def to_s(io : IO)
-      to_h.to_s io
+      n = size
+      h = first(5).to_h.to_s
+      h = h.gsub "}", " ...}" if n > 5
+
+      io << "size:#{n}, #{h}"
     end
   end
 end

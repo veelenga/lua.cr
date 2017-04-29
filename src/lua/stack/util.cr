@@ -9,6 +9,13 @@ module Lua
       LibLua.version(@state).value
     end
 
+    # Gets information about a specific function or function invocation.
+    def getinfo(what)
+      ar = LibLua::Debug.new
+      LibLua.getinfo @state, what, pointerof(ar)
+      ar
+    end
+
     protected def check_lua_supported
       if (ver = version) < 503
         raise RuntimeError.new "Lua #{ver} not supported. Try Lua 5.3 or higher."

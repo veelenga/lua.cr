@@ -58,9 +58,9 @@ module Lua::StackMixin
         }
       end.traceback.should eq <<-STACK
       stack traceback:
-      \t[string "lua_chunk"]:3: in metamethod '__add'
-      \t[string "lua_chunk"]:3: in function 's'
-      \t[string "lua_chunk"]:6: in main chunk
+      \t[string "error handler"]:3: in metamethod '__add'
+      \t[string "s = function()..."]:3: in function 's'
+      \t[string "s = function()..."]:6: in main chunk
       STACK
     end
   end

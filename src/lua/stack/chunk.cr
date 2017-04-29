@@ -12,8 +12,8 @@ module Lua
     #   return double(double(2))
     # } # => 8
     # ```
-    def run(buff : String, name = "lua_chunk")
-      call = CALL.new LibLua.l_loadbufferx @state, buff, buff.size, name, nil
+    def run(buff : String, name : String? = nil)
+      call = CALL.new LibLua.l_loadbufferx @state, buff, buff.size, name || buff.strip, nil
       raise self.error(call, pop) if call != CALL::OK
       call_and_return size
     end
