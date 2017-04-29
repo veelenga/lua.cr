@@ -1,7 +1,7 @@
 require "../../spec_helper"
 
 module Lua::StackMixin
-  describe Table do
+  describe TableSupport do
     describe "#pushtable" do
       it "pushes Array" do
         t = Stack.new.tap(&.pushtable([1, true, false, "a"])).pop.as(Lua::Table)

@@ -35,5 +35,16 @@ module Lua
         f.call.should eq "ff"
       end
     end
+
+    describe "#to_s" do
+      it "returns string representation of the function" do
+        f = Lua::Stack.new.run(%q{
+          return function(x, y)
+            return x + y
+          end
+        })
+        f.to_s.should eq "argsize:2, function(x, y)..."
+      end
+    end
   end
 end

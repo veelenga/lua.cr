@@ -9,3 +9,6 @@
 
 # ignore lua sources
 /lua-*.*.*
+
+# hererocks
+/env/*

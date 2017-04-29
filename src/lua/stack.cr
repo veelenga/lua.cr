@@ -4,7 +4,7 @@ module Lua
   class Stack
     include StackMixin::Type
     include StackMixin::Util
-    include StackMixin::Table
+    include StackMixin::TableSupport
     include StackMixin::Chunk
     include StackMixin::Registry
     include StackMixin::ErrorHandling

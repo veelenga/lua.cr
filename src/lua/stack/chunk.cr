@@ -12,9 +12,9 @@ module Lua
     #   return double(double(2))
     # } # => 8
     # ```
-    def run(buff : String, name = "lua_chunk")
-      call = CALL.new LibLua.l_loadbufferx @state, buff, buff.size, name, nil
-      raise self.error(call, pop.as(String)) if call != CALL::OK
+    def run(buff : String, name : String? = nil)
+      call = CALL.new LibLua.l_loadbufferx @state, buff, buff.size, name || buff.strip, nil
+      raise self.error(call, pop) if call != CALL::OK
       call_and_return size
     end
 
@@ -25,7 +25,7 @@ module Lua
     # ```
     def run(lua_file : File)
       call = CALL.new LibLua.l_loadfilex @state, lua_file.path, nil
-      raise self.error(call, pop.as(String)) if call != CALL::OK
+      raise self.error(call, pop) if call != CALL::OK
       call_and_return size
     end
 
@@ -36,7 +36,7 @@ module Lua
 
       args.each { |a| self.<< a }
       call = CALL.new LibLua.pcallk(@state, args.size, Lua::MULTRET, 1, error_handler_pos, nil)
-      raise self.error(call, pop.as(Lua::Table).to_h) if call != CALL::OK
+      raise self.error(call, pop) if call != CALL::OK
 
       elements = (chunk_pos..size).map { pop }
       elements.size > 1 ? elements : elements.first?
