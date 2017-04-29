@@ -35,7 +35,7 @@ module Lua
       chunk_pos += 1 if error_handler_pos != 0
 
       args.each { |a| self.<< a }
-      call = CALL.new LibLua.pcallk(@state, args.size, Lua::MULTRET, 1, error_handler_pos, nil)
+      call = CALL.new LibLua.pcallk(@state, args.size, Lua::MULTRET, error_handler_pos, 0, nil)
       raise self.error(call, pop) if call != CALL::OK
 
       elements = (chunk_pos..size).map { pop }

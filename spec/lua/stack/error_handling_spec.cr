@@ -63,5 +63,17 @@ module Lua::StackMixin
       \t[string "s = function()..."]:6: in main chunk
       STACK
     end
+
+    it "throws RuntimeError on non-emtpy stack" do
+      stack = Stack.new.tap &.<< 1
+      sum = stack.run %q{
+        return function (x, y)
+          return x + y
+        end
+      }
+      expect_raises RuntimeError, "attempt to perform arithmetic on a string value (local 'x')" do
+        sum.as(Lua::Function).call("a", 3)
+      end
+    end
   end
 end
