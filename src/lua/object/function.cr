@@ -21,12 +21,13 @@ module Lua
       end
     end
 
-    # String representation of function.
-    # Contains number of arguments and function Lua source.
+    # String representation of the function.
+    # Contains number of args and function Lua source.
     def to_s(io)
       copy_to_stack
       info = @stack.getinfo(">Su")
-      io << "argsize:#{info.nparams}, #{String.new info.source}"
+      source = String.new(info.source).gsub(/^return /, "")[0, 20].rstrip + "..."
+      io << "argsize:#{info.nparams}, #{source}"
     end
   end
 end
