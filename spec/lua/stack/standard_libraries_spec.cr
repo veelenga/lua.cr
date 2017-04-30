@@ -1,3 +1,5 @@
+require "../../spec_helper"
+
 module Lua::StackMixin
   describe StandardLibraries do
     describe "MODULES" do

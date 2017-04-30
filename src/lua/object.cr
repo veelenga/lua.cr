@@ -16,7 +16,12 @@ module Lua
     end
 
     protected def copy_to_stack
-      LibLua.rawgeti(@stack.state, Lua::REGISTRYINDEX, ref)
+      @stack.rawgeti(ref) if ref
+    end
+
+    def finalize
+      return if @stack.closed? || !ref
+      @stack.unref(ref) rescue nil
     end
   end
 end

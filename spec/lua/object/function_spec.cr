@@ -1,3 +1,5 @@
+require "../../spec_helper"
+
 module Lua
   describe Function do
     describe "#call" do

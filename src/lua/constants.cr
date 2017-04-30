@@ -14,12 +14,6 @@ module Lua
     TTHREAD        =  8
   end
 
-  REFNIL        =       -1
-  NOREF         =       -2
-  REGISTRYINDEX = -1001000
-
-  MULTRET = -1
-
   enum CALL
     OK        = 0
     YIELD     = 1
@@ -30,4 +24,10 @@ module Lua
     ERRERR    = 6
     ERRFILE   = 7
   end
+
+  REFNIL        =       -1
+  NOREF         =       -2
+  REGISTRYINDEX = -1001000
+
+  MULTRET = -1
 end

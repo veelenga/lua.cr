@@ -13,6 +13,8 @@ module Lua
     getter state
     getter libs = Set(Symbol).new
 
+    getter? closed : Bool = false
+
     # Initializes new Lua stack running in a new, independent state.
     # Has to be closed to call the corresponding garbage-collection
     # metamethods on Lua side.
@@ -53,6 +55,7 @@ module Lua
     def close
       LibLua.close @state
       @libs.clear
+      @closed = true
     end
 
     # Adds Crystal object to Lua stack.
