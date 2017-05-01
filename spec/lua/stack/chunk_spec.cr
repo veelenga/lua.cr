@@ -40,7 +40,8 @@ module Lua::StackMixin
             return x + y
           end
           return sum
-        }).is_a?(Function).should be_true
+        }).should be_a Function
+        s.close
       end
     end
 
