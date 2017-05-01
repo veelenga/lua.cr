@@ -14,11 +14,23 @@ module Lua
           ref = s.reference(1)
           MyObj.new(s, ref).release
           s.rawgeti(ref).should eq TYPE::TNIL
-        end.close
+        end
+      end
+
+      it "raises an error if object has been already released" do
+        s = Stack.new.tap(&.<< [1, 2, 3])
+        ref = s.reference(1)
+        obj = MyObj.new(s, ref).tap(&.release)
+        expect_raises RuntimeError, "object does not have a reference" do
+          obj.load
+        end
       end
     end
   end
 
   private class MyObj < Object
+    def load
+      copy_to_stack
+    end
   end
 end
