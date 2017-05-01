@@ -101,7 +101,7 @@ lib LibLua
   fun gettable = lua_gettable(l : State, idx : LibC::Int)
   fun getfield = lua_getfield(l : State, idx : LibC::Int, k : LibC::Char*)
   fun rawget = lua_rawget(l : State, idx : LibC::Int)
-  fun rawgeti = lua_rawgeti(l : State, idx : LibC::Int, n : LibC::Int)
+  fun rawgeti = lua_rawgeti(l : State, idx : LibC::Int, n : LibC::Int) : LibC::Int
   fun rawgetp = lua_rawgetp(l : State, idx : LibC::Int, p : Void*)
   fun createtable = lua_createtable(l : State, narr : LibC::Int, nrec : LibC::Int)
   fun newuserdata = lua_newuserdata(l : State, sz : LibC::SizeT) : Void*
