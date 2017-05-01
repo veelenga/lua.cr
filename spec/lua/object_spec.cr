@@ -8,11 +8,11 @@ module Lua
       end
     end
 
-    describe "#finalize" do
+    describe "#release" do
       it "frees lua object" do
         Stack.new.tap(&.<< 100).tap do |s|
           ref = s.reference(1)
-          MyObj.new(s, ref).finalize
+          MyObj.new(s, ref).release
           s.rawgeti(ref).should eq TYPE::TNIL
         end.close
       end

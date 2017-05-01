@@ -19,9 +19,12 @@ module Lua
       @stack.rawgeti(ref) if ref
     end
 
-    def finalize
+    # Removes a reference to this Lua object. It is not be possible
+    # to retrieve the object after it is being released.
+    def release
       return if @stack.closed? || !ref
-      @stack.unref(ref) rescue nil
+      @stack.unref(ref)
+      @ref = nil
     end
   end
 end
