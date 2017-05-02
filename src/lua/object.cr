@@ -2,7 +2,7 @@ module Lua
   abstract class Object
     getter ref
 
-    def initialize(@stack : Stack = stack, @ref : Int32? = ref)
+    def initialize(@stack : Stack, @ref : Int32?)
     end
 
     # Loads Lua object onto the stack from registry, yields it's
