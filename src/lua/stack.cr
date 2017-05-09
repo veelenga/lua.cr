@@ -4,10 +4,11 @@ module Lua
   class Stack
     include StackMixin::Type
     include StackMixin::Util
-    include StackMixin::TableSupport
     include StackMixin::Chunk
     include StackMixin::Registry
+    include StackMixin::TableSupport
     include StackMixin::ErrorHandling
+    include StackMixin::CoroutineSupport
     include StackMixin::StandardLibraries
 
     getter state
@@ -29,7 +30,10 @@ module Lua
     # stack.close
     # ```
     def initialize(libs = :all)
-      @state = LibLua.l_newstate
+      initialize LibLua.l_newstate, libs
+    end
+
+    def initialize(@state : LibLua::State, libs)
       check_lua_supported
 
       open_libs(libs)
@@ -105,8 +109,8 @@ module Lua
       when TYPE::TSTRING           then String.new LibLua.tolstring(@state, pos, nil)
       when TYPE::TTABLE            then Table.new self, reference(pos)
       when TYPE::TFUNCTION         then Function.new self, reference(pos)
+      when TYPE::TTHREAD           then Stack.new LibLua.tothread(@state, pos), libs.to_a
       when TYPE::TUSERDATA         then nil # TBD
-      when TYPE::TTHREAD           then nil # TBD
       when TYPE::TLIGHTUSERDATA    then nil # TBD
       else
         raise Exception.new "unable to map Lua type '#{type_at(pos)}'"

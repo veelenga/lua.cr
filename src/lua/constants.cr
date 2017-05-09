@@ -1,5 +1,5 @@
 module Lua
-  alias LuaType = Nil | Bool | Float64 | String | Table | Function
+  alias LuaType = Nil | Bool | Float64 | String | Table | Function | Stack
 
   enum TYPE
     TNONE          = -1
