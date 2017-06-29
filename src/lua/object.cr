@@ -10,7 +10,7 @@ module Lua
     # Used internally to ensure the Lua object is always accessible.
     protected def preload(stack = @stack)
       check_ref_valid! @ref
-      copy_to_stack
+      copy_to_stack(stack)
       yield stack.size
     ensure
       stack.remove
