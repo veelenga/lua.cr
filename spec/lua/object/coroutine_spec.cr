@@ -27,8 +27,8 @@ module Lua
           end
         }
         co = lua.newthread(f.as Lua::Function)
-        co.resume
-        co.resume(42).should eq CALL::OK
+        co.resume.should eq nil
+        co.resume(42).should eq 42.0
         lua.close
       end
 
@@ -42,8 +42,10 @@ module Lua
         }
 
         co = t.as(Lua::Coroutine)
-        co.resume.should eq CALL::YIELD
-        co.resume.should eq CALL::OK
+        co.resume.should eq nil
+        co.status.should eq CALL::YIELD
+        co.resume("test").should eq "test"
+        co.status.should eq CALL::OK
         lua.close
       end
 

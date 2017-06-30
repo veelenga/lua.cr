@@ -19,9 +19,9 @@ module Lua
     # }
     #
     # co = lua.newthread(f.as Lua::Function)
-    # co.resume # => before yield
+    # co.resume # before yield
     # co.status # => YIELD
-    # co.resume # => after yield
+    # co.resume # after yield
     # co.status # => OK
     # ```
     #
@@ -31,18 +31,15 @@ module Lua
     # ```
     # t = lua.run %q {
     #   function s(x)
-    #     print("before yield")
-    #     print(coroutine.yield(x) * 10)
-    #     print("after yield")
+    #     return coroutine.yield(x) * 10
     #   end
     #
     #   return coroutine.create(s)
     # }
     #
     # co = t.as(Lua::Coroutine)
-    # co.resume      # => before yield
+    # co.resume      # => nil
     # co.resume(4.2) # => 42.0
-    # co.resume      # => after yield
     # ```
     def initialize(stack, @function : Function? = nil)
       super(stack, nil)
