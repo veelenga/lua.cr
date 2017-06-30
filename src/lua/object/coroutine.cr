@@ -1,7 +1,5 @@
 module Lua
   class Coroutine < Object
-    getter :stack
-
     # Creates new Coroutine with it's own stack
     # and a function to execute.
     #

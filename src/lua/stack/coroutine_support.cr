@@ -11,9 +11,11 @@ module Lua::StackMixin
     protected def resume(*args)
       thread_pos = size
       args.each { |a| self.<< a }
+
       res = CALL.new LibLua.resume(@state, nil, args.size)
       raise error(res, pop) if res > CALL::YIELD
-      pick_results(thread_pos)
+
+      pick_results thread_pos
     end
 
     # Returns the status of the current thread.
