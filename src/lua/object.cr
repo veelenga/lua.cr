@@ -8,24 +8,26 @@ module Lua
     # Loads Lua object onto the stack from registry, yields it's
     # position (stack top) and removes object from the stack again.
     # Used internally to ensure the Lua object is always accessible.
-    protected def preload
+    protected def preload(stack = @stack)
       check_ref_valid! @ref
-      copy_to_stack
-      yield @stack.size
+      copy_to_stack(stack)
+      yield stack.size
     ensure
-      @stack.remove
+      stack.remove
     end
 
-    protected def copy_to_stack
+    # Loads Lua object onto the stack from registry by reference.
+    # Raises `RuntimeError` if reference is not valid.
+    protected def copy_to_stack(stack = @stack)
       check_ref_valid! ref
-      @stack.rawgeti ref.not_nil!
+      stack.rawgeti ref.not_nil!
     end
 
     # Removes a reference to this Lua object. It is not be possible
     # to retrieve the object after it is being released.
-    def release
-      if !@stack.closed? && (ref = @ref)
-        @stack.unref(ref)
+    def release(stack = @stack)
+      if !stack.closed? && (ref = @ref)
+        stack.unref(ref)
         @ref = nil
       end
     end

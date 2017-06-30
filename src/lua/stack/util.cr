@@ -21,5 +21,10 @@ module Lua
         raise RuntimeError.new "Lua #{ver} not supported. Try Lua 5.3 or higher."
       end
     end
+
+    protected def pick_results(start, finish = size)
+      elements = (start..finish).map { pop }
+      elements.size > 1 ? elements : elements.first?
+    end
   end
 end

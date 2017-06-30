@@ -4,10 +4,11 @@ module Lua
   class Stack
     include StackMixin::Type
     include StackMixin::Util
-    include StackMixin::TableSupport
     include StackMixin::Chunk
     include StackMixin::Registry
+    include StackMixin::TableSupport
     include StackMixin::ErrorHandling
+    include StackMixin::CoroutineSupport
     include StackMixin::StandardLibraries
 
     getter state
@@ -21,7 +22,7 @@ module Lua
     #
     # By default it loads all standard libraries. But that's possible to
     # load only a subset of them using `libs` named parameter. If you
-    # pass nil as `libs` parameter, any of standard libraries will be loaded.
+    # pass nil as `libs` parameter, none of standard libraries will be loaded.
     #
     # ```
     # stack = Lua::Stack.new
@@ -29,7 +30,13 @@ module Lua
     # stack.close
     # ```
     def initialize(libs = :all)
-      @state = LibLua.l_newstate
+      initialize LibLua.l_newstate, libs
+    end
+
+    # Initializes new Lua stack running in an existed state.
+    # Has to be closed to call the corresponding garbage-collection
+    # metamethods on Lua side.
+    def initialize(@state : LibLua::State, libs)
       check_lua_supported
 
       open_libs(libs)
@@ -105,8 +112,8 @@ module Lua
       when TYPE::TSTRING           then String.new LibLua.tolstring(@state, pos, nil)
       when TYPE::TTABLE            then Table.new self, reference(pos)
       when TYPE::TFUNCTION         then Function.new self, reference(pos)
+      when TYPE::TTHREAD           then Coroutine.new Stack.new(LibLua.tothread(@state, pos), libs.to_a)
       when TYPE::TUSERDATA         then nil # TBD
-      when TYPE::TTHREAD           then nil # TBD
       when TYPE::TLIGHTUSERDATA    then nil # TBD
       else
         raise Exception.new "unable to map Lua type '#{type_at(pos)}'"

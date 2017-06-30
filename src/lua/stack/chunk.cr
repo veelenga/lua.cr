@@ -38,8 +38,7 @@ module Lua
       call = CALL.new LibLua.pcallk(@state, args.size, Lua::MULTRET, error_handler_pos, 0, nil)
       raise self.error(call, pop) if call != CALL::OK
 
-      elements = (chunk_pos..size).map { pop }
-      elements.size > 1 ? elements : elements.first?
+      pick_results chunk_pos
     ensure
       self.remove if error_handler_pos != 0 # removes the handler
     end
