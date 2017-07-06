@@ -27,7 +27,7 @@ module Lua::StackMixin
         s.size.should eq 0
       end
 
-      it "can return any of LuaType" do
+      it "can return any of Lua::Type" do
         s = Stack.new
         s.run(%q{ return nil }).should eq nil
         s.run(%q{ return "a" }).should eq "a"

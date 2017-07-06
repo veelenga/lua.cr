@@ -133,7 +133,7 @@ module Lua
 
       it "returns empty hash if table is empty" do
         t = table([] of String)
-        t.to_h.should eq({} of LuaType => LuaType)
+        t.to_h.should eq({} of Lua::Type => Lua::Type)
       end
     end
 

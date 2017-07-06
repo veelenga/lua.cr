@@ -1,7 +1,7 @@
 module Lua
   class Table < Object
-    include Enumerable({LuaType, LuaType})
-    include Iterable({LuaType, LuaType})
+    include Enumerable({Type, Type})
+    include Iterable({Type, Type})
 
     # Sets a new value at index into a table.
     #
@@ -67,7 +67,7 @@ module Lua
     # t.to_h # => {"gog" => "c", 1.0 => "a", "io" => "b"}
     # ```
     def to_h
-      each_with_object({} of LuaType => LuaType) do |pair, o|
+      each_with_object({} of Type => Type) do |pair, o|
         k, v = pair
         o[k] = v
       end
