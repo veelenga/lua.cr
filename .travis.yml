@@ -5,6 +5,7 @@ before_install:
   - tar zxf lua-5.3.4.tar.gz
   - cd lua-5.3.4
   - sudo make linux install
+  - cd ../
 
 script:
   - crystal deps
