@@ -6,8 +6,7 @@ before_install:
   - cd lua-5.3.4
   - sudo make linux install
 
-install:
-  - crystal deps
 script:
+  - crystal deps
   - crystal spec
   - bin/ameba
