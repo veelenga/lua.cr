@@ -1,8 +1,0 @@
-files: ./**/*.cr
-run: crystal spec
----
-files: ./shard.yml
-run: crystal deps
-#---
-#files: ./**/*.cr
-#run: crystal tool format
