@@ -80,7 +80,9 @@ module Lua
 
       it "raises error when it is a wrong object" do
         s = Stack.new
-        expect_raises { s << Exception.new }
+        expect_raises Exception do
+          s << Exception.new
+        end
       end
 
       it "accepts custom object that responds to :to_lua" do
