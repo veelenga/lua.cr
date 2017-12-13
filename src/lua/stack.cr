@@ -68,7 +68,7 @@ module Lua
     # Adds Crystal object to Lua stack.
     #
     # ```
-    # Lua::Stack.new.tap do |s|
+    # Lua::Stack.new.tap do |stack|
     #   stack << 10
     #   stack << "str"
     #   stack << false
