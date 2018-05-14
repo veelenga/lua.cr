@@ -70,7 +70,7 @@ module Lua
           t[1].should eq true
           t[2].as(Table)["key"].should eq "value"
         end
-        t.select { |k, v| v.is_a?(String) }.should eq [{2, "a"}]
+        t.select { |_, v| v.is_a?(String) }.should eq [{2, "a"}]
       end
     end
 

@@ -15,7 +15,7 @@ module Lua
 
       it "sets error handler if libs not loaded" do
         expect_raises LuaError do
-          Stack.new(libs = nil).run "wrong again!"
+          Stack.new(libs: nil).run "wrong again!"
         end
       end
     end
@@ -54,7 +54,7 @@ module Lua
       end
 
       it "can push array" do
-        r = Stack.new.tap(&.<< %w(lua is cool))[1].as(Table).map { |k, v| v }
+        r = Stack.new.tap(&.<< %w(lua is cool))[1].as(Table).map { |_, v| v }
         r.should eq %w(lua is cool)
       end
 
@@ -64,17 +64,17 @@ module Lua
       end
 
       it "can push tuple" do
-        r = Stack.new.tap(&.<<({:one, :two, :three}))[1].as(Table).map { |k, v| v }
+        r = Stack.new.tap(&.<<({:one, :two, :three}))[1].as(Table).map { |_, v| v }
         r.should eq %w(one two three)
       end
 
       it "can push named tuple" do
-        r = Stack.new.tap(&.<<({one: '1', two: '2', three: '3'}))[1].as(Table).map { |k, v| v.as(String) }
+        r = Stack.new.tap(&.<<({one: '1', two: '2', three: '3'}))[1].as(Table).map { |_, v| v.as(String) }
         r.sort.should eq %w(1 2 3)
       end
 
       it "can push inner array" do
-        r = Stack.new.tap(&.<<({"inner" => [1, 2, 3]}))[1].as(Table)["inner"].as(Table).map { |k, v| v.as(Float) }
+        r = Stack.new.tap(&.<<({"inner" => [1, 2, 3]}))[1].as(Table)["inner"].as(Table).map { |_, v| v.as(Float) }
         r.sort.should eq [1, 2, 3]
       end
 

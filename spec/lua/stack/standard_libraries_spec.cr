@@ -10,25 +10,25 @@ module Lua::StackMixin
 
     describe "#open_libs" do
       it "accepts an Array of symbols" do
-        stack = Stack.new libs = nil
+        stack = Stack.new libs: nil
         stack.open_libs %i(base debug)
         stack.libs.to_a.should eq [:base, :debug]
       end
 
       it "accepts a Symbol" do
-        stack = Stack.new libs = nil
+        stack = Stack.new libs: nil
         stack.open_libs :math
         stack.libs.to_a.should eq [:math]
       end
 
       it "accepts special :all Symbol and opens all libs" do
-        stack = Stack.new libs = nil
+        stack = Stack.new libs: nil
         stack.open_libs :all
         stack.libs.to_a.should eq StandardLibraries::MODULES
       end
 
       it "accepts nil" do
-        stack = Stack.new libs = nil
+        stack = Stack.new libs: nil
         stack.open_libs nil
         stack.libs.size.should eq 0
       end
