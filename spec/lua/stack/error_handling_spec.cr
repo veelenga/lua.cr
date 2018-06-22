@@ -31,7 +31,7 @@ module Lua::StackMixin
     it "can catch lua file error" do
       tempfile = Tempfile.open("foo") { }
       invalid_file = File.new tempfile.path
-      tempfile.unlink
+      tempfile.delete
       expect_raises FileError, "cannot open #{invalid_file.path}" do
         Lua.load.run invalid_file
       end

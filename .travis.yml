@@ -8,6 +8,6 @@ before_install:
   - cd ../
 
 script:
-  - crystal deps
+  - shards install
   - crystal spec
   - bin/ameba

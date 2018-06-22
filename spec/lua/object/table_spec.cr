@@ -66,9 +66,9 @@ module Lua
         t = Stack.new.tap(&.<< [1, "a", [true, {"key" => :value}]]).pop.as(Table)
         t[1].should eq 1
         t[2].should eq "a"
-        t[3].as(Table).tap do |t|
-          t[1].should eq true
-          t[2].as(Table)["key"].should eq "value"
+        t[3].as(Table).tap do |tb|
+          tb[1].should eq true
+          tb[2].as(Table)["key"].should eq "value"
         end
         t.select { |_, v| v.is_a?(String) }.should eq [{2, "a"}]
       end
