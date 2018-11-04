@@ -1,5 +1,4 @@
 require "../../spec_helper"
-require "tempfile"
 
 module Lua::StackMixin
   describe ErrorHandling do
@@ -29,7 +28,7 @@ module Lua::StackMixin
     end
 
     it "can catch lua file error" do
-      tempfile = Tempfile.open("foo") { }
+      tempfile = File.tempfile("foo")
       invalid_file = File.new tempfile.path
       tempfile.delete
       expect_raises FileError, "cannot open #{invalid_file.path}" do
