@@ -58,6 +58,11 @@ module Lua
       end
     end
 
+    # Implements Iterable
+    def each : Iterator
+      return this
+    end
+
     # Converts this table to Crystal hash.
     #
     # ```
