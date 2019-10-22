@@ -136,6 +136,7 @@ module Lua
     # ```
     #
     def to_s(io : IO)
+      return "" if size == 0
       io << String.build do |acc|
         l = size
         pad = Math.log10(l).to_i + 1
