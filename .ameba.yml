@@ -1,3 +1,6 @@
 LineLength:
   # Disallows lines longer that MaxLength number of symbols.
   MaxLength: 150
+Metrics/CyclomaticComplexity:
+  Enabled: true
+  MaxComplexity: 15

@@ -60,7 +60,7 @@ module Lua
 
     # Implements Iterable
     def each : Iterator
-      return this
+      self
     end
 
     # Converts this table to Crystal hash.
