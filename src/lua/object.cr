@@ -38,4 +38,15 @@ module Lua
       end
     end
   end
+
+  class Reference
+    getter ref
+
+    def initialize(@stack : Stack, @ref : Void*)
+    end
+
+    def to_s(io)
+      io << "pointer:#{@ref.address}"
+    end
+  end
 end

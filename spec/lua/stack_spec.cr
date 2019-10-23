@@ -190,8 +190,8 @@ module Lua
     def initialize(@message : String = message)
     end
 
-    def to_lua(state)
-      LibLua.pushstring(state, @message)
+    def to_lua(stack)
+      stack << @message
     end
   end
 end
