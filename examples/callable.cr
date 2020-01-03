@@ -86,9 +86,7 @@ class MyLuaModule
   end
 
   def feed_all
-    @animals.each do |a|
-      a.feed
-    end
+    @animals.each &.feed
   end
 end
 

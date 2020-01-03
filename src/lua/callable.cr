@@ -87,8 +87,8 @@ module LuaCallable
               proc = ->(state : LibLua::State) {
                 stack = Lua::Stack.new(state, :all)
                 {% reverse_args = [] of Arg %}
-                {% for a, index in m.args %}
-                  {% reverse_args = [a] + reverse_args %}
+                {% for a in m.args %}
+                  {% reverse_args = reverse_args.unshift(a) %}
                 {% end %}
                 {% for a, index in reverse_args %}
                     {% if a.restriction.is_a?(Nop) %}
