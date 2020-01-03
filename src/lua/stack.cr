@@ -10,6 +10,7 @@ module Lua
     include StackMixin::ErrorHandling
     include StackMixin::CoroutineSupport
     include StackMixin::StandardLibraries
+    include StackMixin::ClassSupport
 
     getter state
     getter libs = Set(Symbol).new
@@ -76,18 +77,26 @@ module Lua
     # ```
     def <<(o)
       case o
-      when Nil              then LibLua.pushnil(@state)
-      when Int              then LibLua.pushinteger(@state, o)
-      when Float            then LibLua.pushnumber(@state, o)
-      when Bool             then LibLua.pushboolean(@state, o ? 1 : 0)
-      when Char             then LibLua.pushstring(@state, o.to_s)
-      when String           then LibLua.pushstring(@state, o)
-      when Symbol           then LibLua.pushstring(@state, o.to_s)
-      when Array, Tuple     then pushtable(o.to_a)
-      when Hash, NamedTuple then pushtable(o.to_h)
-        # TODO: Proc
+      when Nil                        then LibLua.pushnil(@state)
+      when Int                        then LibLua.pushinteger(@state, o)
+      when Float                      then LibLua.pushnumber(@state, o)
+      when Bool                       then LibLua.pushboolean(@state, o ? 1 : 0)
+      when Char                       then LibLua.pushstring(@state, o.to_s)
+      when String                     then LibLua.pushstring(@state, o)
+      when Symbol                     then LibLua.pushstring(@state, o.to_s)
+      when Array, Tuple               then pushtable(o.to_a)
+      when Hash, NamedTuple           then pushtable(o.to_h)
+      when Proc(LibLua::State, Int32) then pushclosure(o.as(Proc))
+      when Class
+        if o < LuaCallable
+          pushmetatable(o)
+        else
+          raise ArgumentError.new(
+            "unable to pass Crystal Class of type '#{typeof(o)}' to Lua"
+          )
+        end
       else
-        o.responds_to?(:to_lua) ? o.to_lua(@state) : raise ArgumentError.new(
+        o.responds_to?(:to_lua) ? o.to_lua(self) : raise ArgumentError.new(
           "unable to pass Crystal object of type '#{typeof(o)}' to Lua"
         )
       end
@@ -113,8 +122,14 @@ module Lua
       when TYPE::TTABLE            then Table.new self, reference(pos)
       when TYPE::TFUNCTION         then Function.new self, reference(pos)
       when TYPE::TTHREAD           then Coroutine.new Stack.new(LibLua.tothread(@state, pos), libs.to_a)
-      when TYPE::TUSERDATA         then nil # TBD
-      when TYPE::TLIGHTUSERDATA    then nil # TBD
+      when TYPE::TUSERDATA
+        type_info = crystal_type_info_at(pos)
+        if !type_info[1].nil? && type_info[0] == LuaCallable.name
+          Callable.new self, LibLua.touserdata(state, pos), type_info[1]
+        else
+          Reference.new self, LibLua.topointer(state, pos)
+        end
+      when TYPE::TLIGHTUSERDATA then Reference.new self, LibLua.topointer(state, pos)
       else
         raise Exception.new "unable to map Lua type '#{type_at(pos)}'"
       end

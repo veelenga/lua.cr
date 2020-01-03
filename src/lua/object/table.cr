@@ -31,7 +31,7 @@ module Lua
       end
     end
 
-    # Implements enumerator. Traverses a table in Lua stack using
+    # Implements Enumerable. Traverses a table in Lua stack using
     # [next](http://www.lua.org/manual/5.3/manual.html#pdf-next).
     def each : Nil
       preload do |pos|
@@ -44,7 +44,7 @@ module Lua
       end
     end
 
-    # Implements iterator. Traverses a table in Lua stack using
+    # Implements Iterator. Traverses a table in Lua stack using
     # [next](http://www.lua.org/manual/5.3/manual.html#pdf-next).
     # ```
     def next
@@ -88,7 +88,6 @@ module Lua
       n = size
       h = first(5).to_h.to_s
       h = h.gsub "}", " ...}" if n > 5
-
       io << "size:#{n}, #{h}"
     end
   end

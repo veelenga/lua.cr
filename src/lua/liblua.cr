@@ -37,6 +37,9 @@ lib LibLua
   fun l_loadfilex = luaL_loadfilex(l : State, filename : LibC::Char*, mode : LibC::Char*) : LibC::Int
   fun l_loadbufferx = luaL_loadbufferx(l : State, buff : LibC::Char*, sz : LibC::SizeT, name : LibC::Char*, mode : LibC::Char*) : LibC::Int
   fun l_requiref = luaL_requiref(l : State, modname : LibC::Char*, openf : CFunction, glb : LibC::Int)
+  fun l_newmetatable = luaL_newmetatable(l : State, tname : LibC::Char*) : LibC::Int
+  fun l_getmetatable = luaL_getmetatable(l : State, tname : LibC::Char*) : LibC::Int
+  fun l_checkudata = luaL_checkudata(l : State, ud : LibC::Int, tname : LibC::Char*) : Void*
 
   fun open_base = luaopen_base(l : State) : LibC::Int
   fun open_package = luaopen_package(l : State) : LibC::Int
