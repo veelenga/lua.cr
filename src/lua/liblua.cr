@@ -74,7 +74,7 @@ lib LibLua
   fun close = lua_close(l : State)
   fun newthread = lua_newthread(l : State) : State
   fun atpanic = lua_atpanic(l : State, panicf : CFunction) : CFunction
-  fun version = lua_version(l : State) : Number*
+  fun version = lua_version(l : State) : Number
   fun absindex = lua_absindex(l : State, idx : LibC::Int) : LibC::Int
   fun gettop = lua_gettop(l : State) : LibC::Int
   fun settop = lua_settop(l : State, idx : LibC::Int)

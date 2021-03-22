@@ -6,7 +6,7 @@ module Lua
     # state.version # => 503.0
     # ```
     def version
-      LibLua.version(@state).value
+      LibLua.version(@state)
     end
 
     # Gets information about a specific function or function invocation.
