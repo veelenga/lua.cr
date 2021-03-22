@@ -1,8 +1,8 @@
 module Lua
   class Object
     macro methods
-          {{ @type.methods.map &.name.stringify }}
-        end
+      {{ @type.methods.map &.name.stringify }}
+    end
   end
 
   module StackMixin::ClassSupport
@@ -35,7 +35,7 @@ module Lua
 
     def pushobject(a : LuaCallable)
       # pushes onto the stack a new full userdata with the block address, and returns this address
-      p = LibLua.newuserdata(@state, sizeof(Pointer(UInt64))) # address of user data
+      p = LibLua.newuserdatauv(@state, sizeof(Pointer(UInt64)), 1) # address of user data
       user_data = p.as(Pointer(UInt64))
       user_data.value = a.object_id
       pushmetatable(a.class)

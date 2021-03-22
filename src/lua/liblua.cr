@@ -107,9 +107,9 @@ lib LibLua
   fun rawgeti = lua_rawgeti(l : State, idx : LibC::Int, n : LibC::Int) : LibC::Int
   fun rawgetp = lua_rawgetp(l : State, idx : LibC::Int, p : Void*)
   fun createtable = lua_createtable(l : State, narr : LibC::Int, nrec : LibC::Int)
-  fun newuserdata = lua_newuserdata(l : State, sz : LibC::SizeT) : Void*
+  fun newuserdatauv = lua_newuserdatauv(l : State, sz : LibC::SizeT, nuvalue : LibC::Int) : Void*
   fun getmetatable = lua_getmetatable(l : State, objindex : LibC::Int) : LibC::Int
-  fun getuservalue = lua_getuservalue(l : State, idx : LibC::Int)
+  fun getiuservalue = lua_getiuservalue(l : State, idx : LibC::Int, n : LibC::Int) : LibC::Int
   fun setglobal = lua_setglobal(l : State, var : LibC::Char*)
   fun settable = lua_settable(l : State, idx : LibC::Int)
   fun setfield = lua_setfield(l : State, idx : LibC::Int, k : LibC::Char*)
@@ -117,7 +117,7 @@ lib LibLua
   fun rawseti = lua_rawseti(l : State, idx : LibC::Int, n : LibC::Int)
   fun rawsetp = lua_rawsetp(l : State, idx : LibC::Int, p : Void*)
   fun setmetatable = lua_setmetatable(l : State, objindex : LibC::Int) : LibC::Int
-  fun setuservalue = lua_setuservalue(l : State, idx : LibC::Int)
+  fun setiuservalue = lua_setiuservalue(l : State, idx : LibC::Int, n : LibC::Int) : LibC::Int
   fun callk = lua_callk(l : State, nargs : LibC::Int, nresults : LibC::Int, ctx : LibC::Int, k : CFunction)
   fun getctx = lua_getctx(l : State, ctx : LibC::Int*) : LibC::Int
   fun pcallk = lua_pcallk(l : State, nargs : LibC::Int, nresults : LibC::Int, errfunc : LibC::Int, ctx : LibC::Int, k : CFunction) : LibC::Int
