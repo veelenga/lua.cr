@@ -12,7 +12,8 @@ module Lua::StackMixin
       thread_pos = size
       args.each { |a| self.<< a }
 
-      res = CALL.new LibLua.resume(@state, nil, args.size)
+      nres = 0
+      res = CALL.new LibLua.resume(@state, nil, args.size, pointerof(nres))
       raise error(res, pop) if res > CALL::YIELD
 
       pick_results thread_pos

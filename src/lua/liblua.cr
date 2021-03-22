@@ -123,7 +123,7 @@ lib LibLua
   fun pcallk = lua_pcallk(l : State, nargs : LibC::Int, nresults : LibC::Int, errfunc : LibC::Int, ctx : LibC::Int, k : CFunction) : LibC::Int
   fun load = lua_load(l : State, reader : Reader, dt : Void*, chunkname : LibC::Char*, mode : LibC::Char*) : LibC::Int
   fun yieldk = lua_yieldk(l : State, nresults : LibC::Int, ctx : LibC::Int, k : CFunction) : LibC::Int
-  fun resume = lua_resume(l : State, from : State, narg : LibC::Int) : LibC::Int
+  fun resume = lua_resume(l : State, from : State, narg : LibC::Int, nresults : LibC::Int*) : LibC::Int
   fun status = lua_status(l : State) : LibC::Int
   fun gc = lua_gc(l : State, what : LibC::Int, data : LibC::Int) : LibC::Int
   fun error = lua_error(l : State) : LibC::Int
