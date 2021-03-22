@@ -29,7 +29,7 @@ module Lua
     end
 
     protected def check_lua_supported
-      if (ver = version) < 503
+      if (ver = version) < 504
         raise RuntimeError.new "Lua #{ver} not supported. Try Lua 5.3 or higher."
       end
     end
