@@ -45,7 +45,6 @@ module Lua::StackMixin
       when .errrun?    then RuntimeError.new message, traceback
       when .errsyntax? then SyntaxError.new message, traceback
       when .errmem?    then MemoryError.new message, traceback
-      when .errgcmm?   then GCError.new message, traceback
       when .errerr?    then ErrorHandlerError.new message, traceback
       when .errfile?   then FileError.new message, traceback
       else

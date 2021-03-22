@@ -14,7 +14,5 @@ module Lua
 
   class ErrorHandlerError < LuaError; end
 
-  class GCError < LuaError; end
-
   class FileError < LuaError; end
 end
