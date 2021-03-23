@@ -18,6 +18,7 @@ lib LibLua
     namewhat : LibC::Char*
     what : LibC::Char*
     source : LibC::Char*
+    srclen : LibC::SizeT
     currentline : LibC::Int
     linedefined : LibC::Int
     lastlinedefined : LibC::Int
@@ -25,6 +26,8 @@ lib LibLua
     nparams : UInt8
     isvararg : LibC::Char
     istailcall : LibC::Char
+    ftransfer : LibC::UShort
+    ntransfer : LibC::UShort
     short_src : LibC::Char[60]
     i_ci : Void*
   end
