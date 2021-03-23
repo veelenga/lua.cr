@@ -1,9 +1,9 @@
 language: crystal
 
 before_install:
-  - curl -R -O http://www.lua.org/ftp/lua-5.3.4.tar.gz
-  - tar zxf lua-5.3.4.tar.gz
-  - cd lua-5.3.4
+  - curl -R -O http://www.lua.org/ftp/lua-5.4.2.tar.gz
+  - tar zxf lua-5.4.2.tar.gz
+  - cd lua-5.4.2
   - sudo make linux install
   - cd ../
 
