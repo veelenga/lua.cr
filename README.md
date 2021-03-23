@@ -4,7 +4,7 @@
 
 Bindings to liblua and a wrapper around it. **UNDER CONSTRUCTION** :construction:
 
-Only [Lua 5.3](http://www.lua.org/ftp/) or higher is supported.
+Only [Lua 5.4](http://www.lua.org/ftp/) or higher is supported.
 
 ## Installation
 
