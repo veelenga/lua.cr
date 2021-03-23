@@ -4,7 +4,7 @@ module Lua::StackMixin
     # that state and function `f`
     def newthread(f : Function)
       LibLua.newthread(@state)
-      pop.as(Coroutine).tap { |c| c.function = f }
+      pop.as(Coroutine).tap(&.function=(f))
     end
 
     # Starts and resumes a coroutine in the given thread
