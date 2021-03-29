@@ -1,8 +1,8 @@
 module Lua
   class Object
     macro methods
-          {{ @type.methods.map &.name.stringify }}
-        end
+      {{ @type.methods.map &.name.stringify }}
+    end
   end
 
   module StackMixin::ClassSupport
@@ -11,21 +11,21 @@ module Lua
         # Set __index
         proc = ->LuaCallable.__index(LibLua::State)
         self << INDEX_METAMETHOD             # push method name on stack
-        LibLua.pushcclosure(@state, proc, 0) # pointer to function on stack
+        pushclosure(proc)                    # pointer to function on stack
         LibLua.settable(@state, -3)
         # Set __gc
         proc = ->LuaCallable.__gc(LibLua::State)
         self << GC_METAMETHOD                # push method name on stack
-        LibLua.pushcclosure(@state, proc, 0) # pointer to function on stack
+        pushclosure(proc)                    # pointer to function on stack
         LibLua.settable(@state, -3)
         # set __newindex
         proc = ->LuaCallable.__newindex(LibLua::State)
         self << NEW_INDEX_METAMETHOD         # push method name on stack
-        LibLua.pushcclosure(@state, proc, 0) # pointer to function on stack
+        pushclosure(proc)                    # pointer to function on stack
         LibLua.settable(@state, -3)
         proc = ->type.__new(LibLua::State)
         self << NEW_OBJECT_METAKEY           # push method name on stack
-        LibLua.pushcclosure(@state, proc, 0) # pointer to function on stack
+        pushclosure(proc)                    # pointer to function on stack
         LibLua.settable(@state, -3)
         self << CRYSTAL_BASE_TYPE_METAKEY
         self << LuaCallable.name
@@ -35,7 +35,7 @@ module Lua
 
     def pushobject(a : LuaCallable)
       # pushes onto the stack a new full userdata with the block address, and returns this address
-      p = LibLua.newuserdata(@state, sizeof(Pointer(UInt64))) # address of user data
+      p = LibLua.newuserdatauv(@state, sizeof(Pointer(UInt64)), 1) # address of user data
       user_data = p.as(Pointer(UInt64))
       user_data.value = a.object_id
       pushmetatable(a.class)

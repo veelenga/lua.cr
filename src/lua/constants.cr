@@ -20,9 +20,8 @@ module Lua
     ERRRUN    = 2
     ERRSYNTAX = 3
     ERRMEM    = 4
-    ERRGCMM   = 5
-    ERRERR    = 6
-    ERRFILE   = 7
+    ERRERR    = 5
+    ERRFILE   = 6
   end
 
   REFNIL        =         -1

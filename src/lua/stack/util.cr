@@ -6,7 +6,7 @@ module Lua
     # state.version # => 503.0
     # ```
     def version
-      LibLua.version(@state).value
+      LibLua.version(@state)
     end
 
     # Gets information about a specific function or function invocation.
@@ -29,8 +29,8 @@ module Lua
     end
 
     protected def check_lua_supported
-      if (ver = version) < 503
-        raise RuntimeError.new "Lua #{ver} not supported. Try Lua 5.3 or higher."
+      if (ver = version) < 504
+        raise RuntimeError.new "Lua #{ver} not supported. Try Lua 5.4 or higher."
       end
     end
 

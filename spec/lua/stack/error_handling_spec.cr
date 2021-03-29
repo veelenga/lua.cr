@@ -38,7 +38,7 @@ module Lua::StackMixin
 
     it "can give you a lua error message" do
       stack = Stack.new
-      expect_raises RuntimeError, "attempt to perform arithmetic on a string value" do
+      expect_raises RuntimeError, "attempt to add a 'string' with a 'number'" do
         stack.run %q{
           s = "a" + 1
         }
@@ -47,7 +47,7 @@ module Lua::StackMixin
 
     it "can give you a lua traceback" do
       stack = Stack.new
-      expect_raises RuntimeError, "attempt to perform arithmetic on a string value" do
+      expect_raises RuntimeError, "attempt to add a 'string' with a 'number'" do
         stack.run %q{
           s = function()
             return "a" + 1
@@ -57,7 +57,8 @@ module Lua::StackMixin
         }
       end.traceback.should eq <<-STACK
       stack traceback:
-      \t[string "error handler"]:3: in metamethod '__add'
+      \t[string "error handler"]:3: in function <[string "error handler"]:2>
+      \t[C]: in metamethod 'add'
       \t[string "s = function()..."]:3: in function 's'
       \t[string "s = function()..."]:6: in main chunk
       STACK
@@ -70,7 +71,7 @@ module Lua::StackMixin
           return x + y
         end
       }
-      expect_raises RuntimeError, "attempt to perform arithmetic on a string value (local 'x')" do
+      expect_raises RuntimeError, "attempt to add a 'string' with a 'number'" do
         sum.as(Lua::Function).call("a", 3)
       end
     end
