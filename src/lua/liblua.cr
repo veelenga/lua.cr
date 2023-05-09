@@ -59,7 +59,7 @@ lib LibLua
   fun pushnumber = lua_pushnumber(l : State, n : Number)
   fun pushinteger = lua_pushinteger(l : State, n : Integer)
   fun pushunsigned = lua_pushunsigned(l : State, n : Unsigned)
-  fun pushlstring = lua_pushlstring(l : State, s : LibC::Char*, len : LibC::SizeT) : LibC::Char*
+  fun pushlstring = lua_pushlstring(l : State, s : LibC::Char*, sz : LibC::SizeT) : LibC::Char*
   fun pushstring = lua_pushstring(l : State, s : LibC::Char*) : LibC::Char*
   fun pushfstring = lua_pushfstring(l : State, fmt : LibC::Char*, ...) : LibC::Char*
   fun pushcclosure = lua_pushcclosure(l : State, fn : CFunction, n : LibC::Int)
