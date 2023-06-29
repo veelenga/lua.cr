@@ -184,6 +184,28 @@ module Lua
         stack.size.should eq 1
       end
     end
+
+    describe "#register_function" do
+      it "creates a new Lua function" do
+        stack = Stack.new
+        Stack.register_function stack, "crystal_debug", ->(value : String) do
+          value
+        end
+
+        result = stack.run %(return crystal_debug("hello"))
+        result.should eq("hello")
+      end
+
+      it "creates a new Lua function with two args" do
+        stack = Stack.new
+        Stack.register_function stack, "crystal_add", ->(x : Float64, y : Float64) do
+          x + y
+        end
+
+        result = stack.run "return crystal_add(1, 2)"
+        result.should eq(3)
+      end
+    end
   end
 
   private class LuaReporter
