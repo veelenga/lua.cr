@@ -8,7 +8,23 @@ Crystal bindings to Lua. Supports [Lua 5.4](http://www.lua.org/ftp/) and higher 
 
 ## Installation
 
-Add this to your application's `shard.yml`:
+Lua development libraries must be installed on your system:
+
+```bash
+# macOS
+brew install lua
+
+# Ubuntu/Debian
+sudo apt install liblua5.4-dev
+
+# Arch Linux
+sudo pacman -S lua
+
+# Fedora
+sudo dnf install lua-devel
+```
+
+Then add this to your application's `shard.yml`:
 
 ```yaml
 dependencies:

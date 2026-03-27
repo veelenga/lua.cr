@@ -1,4 +1,4 @@
-@[Link("lua")]
+@[Link(ldflags: "`pkg-config --libs lua 2>/dev/null || pkg-config --libs lua5.4 2>/dev/null || echo -llua`")]
 lib LibLua
   type State = Void*
 
