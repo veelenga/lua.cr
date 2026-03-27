@@ -59,7 +59,7 @@ module Lua
       end
 
       it "can push hash" do
-        r = Stack.new.tap(&.<< ({"one": '1', "two": '2'}))[1].as(Table).map { |k, v| {k.as(String), v} }
+        r = Stack.new.tap(&.<<({"one": '1', "two": '2'}))[1].as(Table).map { |k, v| {k.as(String), v} }
         r.sort_by(&.[0]).should eq [{"one", "1"}, {"two", "2"}]
       end
 
@@ -103,11 +103,10 @@ module Lua
 
     describe "#to_s" do
       it "represents the stack as a string" do
-        stack = Stack.new.tap do |s|
-          s << 42.24
-          s << false
-          s << "hello!"
-        end
+        stack = Stack.new
+        stack << 42.24
+        stack << false
+        stack << "hello!"
         stack.to_s.should eq "3 : TSTRING(string) hello!\n2 : TBOOLEAN(boolean) false\n1 : TNUMBER(number) 42.24"
       end
 
@@ -118,11 +117,11 @@ module Lua
 
     describe "#size" do
       it "returns the index of the top element" do
-        Stack.new.tap do |s|
-          s << 3
-          s << :times
-          s << :faster
-        end.size.should eq 3
+        stack = Stack.new
+        stack << 3
+        stack << :times
+        stack << :faster
+        stack.size.should eq 3
       end
 
       it "returns 0 when stack is empty" do
@@ -150,30 +149,27 @@ module Lua
       end
 
       it "can remove n elements" do
-        stack = Stack.new.tap do |s|
-          s << 1
-          s << 3
-          s << 5
-        end
+        stack = Stack.new
+        stack << 1
+        stack << 3
+        stack << 5
         stack.remove(2).should eq nil
         stack.size.should eq 1
       end
 
       it "can remove all elements from the stack" do
-        stack = Stack.new.tap do |s|
-          s << :"1"
-          s << :"3"
-          s << :"5"
-        end
+        stack = Stack.new
+        stack << :"1"
+        stack << :"3"
+        stack << :"5"
         stack.remove(stack.size).should eq nil
         stack.size.should eq 0
       end
 
       it "removes all elements from the stack if n is bigger than size" do
-        stack = Stack.new.tap do |s|
-          s << :"1"
-          s << :"3"
-        end
+        stack = Stack.new
+        stack << :"1"
+        stack << :"3"
         stack.remove(100)
         stack.size.should eq 0
       end

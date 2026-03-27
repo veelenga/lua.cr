@@ -5,8 +5,8 @@ module Lua
   extend self
 
   def load(*objects)
-    Stack.new.tap do |s|
-      objects.each { |o| s << o }
+    Stack.new.tap do |stack|
+      objects.each { |obj| stack << obj }
     end
   end
 

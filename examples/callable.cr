@@ -7,7 +7,7 @@ abstract class Animal
   getter mood = 0
   getter hungry = 0
   getter energy = 100
-  property liked = false
+  property? liked = false
   getter name
 
   def initialize(@name : String)
@@ -64,11 +64,11 @@ class MyLuaModule
   @animals = [] of Animal
 
   def new_cow(name : String)
-    Cow.new(name).tap { |c| @animals << c }
+    Cow.new(name).tap { |cow| @animals << cow }
   end
 
   def new_cat(name : String)
-    Cat.new(name).tap { |c| @animals << c }
+    Cat.new(name).tap { |cat| @animals << cat }
   end
 
   def hello_farm
@@ -77,9 +77,9 @@ class MyLuaModule
 
   def hungry?
     String.build do |io|
-      @animals.each do |a|
-        if a.hungry > 0
-          io << a.name << ": " << a.hungry << "\n"
+      @animals.each do |animal|
+        if animal.hungry > 0
+          io << animal.name << ": " << animal.hungry << "\n"
         end
       end
     end

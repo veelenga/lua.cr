@@ -34,7 +34,7 @@ module Lua
       error_handler_pos = self.load_error_handler chunk_pos
       chunk_pos += 1 if error_handler_pos != 0
 
-      args.each { |a| self.<< a }
+      args.each { |arg| self.<< arg }
       call = CALL.new LibLua.pcallk(@state, args.size, Lua::MULTRET, error_handler_pos, 0, nil)
       raise self.error(call, pop) if call != CALL::OK
 

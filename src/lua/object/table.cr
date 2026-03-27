@@ -33,10 +33,10 @@ module Lua
 
     # Implements Enumerable. Traverses a table in Lua stack using
     # [next](http://www.lua.org/manual/5.3/manual.html#pdf-next).
-    def each : Nil
+    def each(&) : Nil
       preload do |pos|
         @stack << nil
-        while (LibLua.next(@stack.state, pos) != 0)
+        while LibLua.next(@stack.state, pos) != 0
           k, v = @stack[-2], @stack[-1]
           yield({k, v})
           @stack.remove
@@ -72,9 +72,9 @@ module Lua
     # t.to_h # => {"gog" => "c", 1.0 => "a", "io" => "b"}
     # ```
     def to_h
-      each_with_object({} of Type => Type) do |pair, o|
+      each_with_object({} of Type => Type) do |pair, hash|
         k, v = pair
-        o[k] = v
+        hash[k] = v
       end
     end
 
