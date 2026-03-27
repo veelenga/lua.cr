@@ -23,10 +23,10 @@ module Lua::StackMixin
     def open_libs(libraries)
       libraries = [libraries].flatten.compact
       if libraries.includes?(:all)
-        LibLua.l_openlibs(@state)
+        LibLua.l_openselectedlibs(@state, ~0, 0)
         @libs.concat(MODULES)
       else
-        libraries.each { |l| open_library(l); @libs.add(l) }
+        libraries.each { |name| open_library(name); @libs.add(name) }
       end
     end
 

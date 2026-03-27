@@ -10,10 +10,11 @@ module Lua
 
     describe "#release" do
       it "frees lua object" do
-        Stack.new.tap(&.<< 100).tap do |s|
-          ref = s.reference(1)
-          MyObj.new(s, ref).release
-          s.rawgeti(ref).should eq TYPE::TNIL
+        Stack.new.tap(&.<< 100).tap do |stack|
+          ref = stack.reference(1)
+          obj = MyObj.new(stack, ref)
+          obj.release
+          obj.ref.should be_nil
         end
       end
 

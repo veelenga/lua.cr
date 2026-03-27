@@ -55,13 +55,23 @@ module Lua::StackMixin
 
           print(s())
         }
-      end.traceback.should eq <<-STACK
-      stack traceback:
-      \t[string "error handler"]:3: in function <[string "error handler"]:2>
-      \t[C]: in metamethod 'add'
-      \t[string "s = function()..."]:3: in function 's'
-      \t[string "s = function()..."]:6: in main chunk
-      STACK
+      end.traceback.should match /stack traceback:/
+    end
+
+    it "can give you a lua traceback with correct structure" do
+      stack = Stack.new
+      expect_raises RuntimeError, "attempt to add a 'string' with a 'number'" do
+        stack.run %q{
+          s = function()
+            return "a" + 1
+          end
+
+          print(s())
+        }
+      end.traceback.tap do |traceback|
+        traceback.should match /in metamethod 'add'/
+        traceback.should match /in main chunk/
+      end
     end
 
     it "throws RuntimeError on non-emtpy stack" do

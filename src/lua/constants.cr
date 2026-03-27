@@ -24,9 +24,9 @@ module Lua
     ERRFILE   = 6
   end
 
-  REFNIL        =         -1
-  NOREF         =         -2
-  REGISTRYINDEX = -1_001_000
+  REFNIL        = -1
+  NOREF         = -2
+  REGISTRYINDEX = -(Int32::MAX // 2 + 1000)
 
   MULTRET = -1
 
