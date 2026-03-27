@@ -32,7 +32,6 @@ lib LibLua
   end
 
   fun l_newstate = luaL_newstate : State
-  fun l_openselectedlibs = luaL_openselectedlibs(l : State, load : LibC::Int, preload : LibC::Int)
   fun l_ref = luaL_ref(l : State, t : LibC::Int) : LibC::Int
   fun l_unref = luaL_unref(l : State, t : LibC::Int, ref : LibC::Int)
   fun l_loadstring = luaL_loadstring(l : State, s : LibC::Char*) : LibC::Int

@@ -22,12 +22,8 @@ module Lua::StackMixin
     # ```
     def open_libs(libraries)
       libraries = [libraries].flatten.compact
-      if libraries.includes?(:all)
-        LibLua.l_openselectedlibs(@state, ~0, 0)
-        @libs.concat(MODULES)
-      else
-        libraries.each { |name| open_library(name); @libs.add(name) }
-      end
+      libs_to_load = libraries.includes?(:all) ? MODULES : libraries
+      libs_to_load.each { |name| open_library(name); @libs.add(name) }
     end
 
     macro open_library(library)
