@@ -2,9 +2,9 @@
 
 # lua.cr
 
-Bindings to liblua and a wrapper around it. **UNDER CONSTRUCTION** :construction:
+[![CI](https://github.com/veelenga/lua.cr/actions/workflows/ci.yml/badge.svg)](https://github.com/veelenga/lua.cr/actions/workflows/ci.yml)
 
-Only [Lua 5.4](http://www.lua.org/ftp/) or higher is supported.
+Crystal bindings to Lua. Supports [Lua 5.4](http://www.lua.org/ftp/) and higher (including Lua 5.5).
 
 ## Installation
 
