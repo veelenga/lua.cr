@@ -5,17 +5,17 @@ module Lua
     # and removes it from the stack. Returns a reference.
     def reference(pos)
       LibLua.pushvalue(@state, pos)
-      LibLua.l_ref(@state, Lua::REGISTRYINDEX)
+      LibLua.l_ref(@state, Lua.registry_index)
     end
 
     # Retrieves an object referred by reference.
     def rawgeti(ref)
-      TYPE.new LibLua.rawgeti(@state, Lua::REGISTRYINDEX, ref)
+      TYPE.new LibLua.rawgeti(@state, Lua.registry_index, ref)
     end
 
     # Frees a reference and its associated object.
     def unref(ref)
-      LibLua.l_unref(@state, Lua::REGISTRYINDEX, ref)
+      LibLua.l_unref(@state, Lua.registry_index, ref)
     end
   end
 end

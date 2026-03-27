@@ -24,9 +24,21 @@ module Lua
     ERRFILE   = 6
   end
 
-  REFNIL        = -1
-  NOREF         = -2
-  REGISTRYINDEX = -(Int32::MAX // 2 + 1000)
+  REFNIL = -1
+  NOREF  = -2
+
+  # Detect REGISTRYINDEX from the linked Lua version.
+  # Lua 5.4: -(1_000_000 + 1000), Lua 5.5+: -(INT_MAX/2 + 1000)
+  @@registry_index : Int32 = begin
+    state = LibLua.l_newstate
+    ver = LibLua.version(state)
+    LibLua.close(state)
+    ver >= 505 ? -(Int32::MAX // 2 + 1000) : -1_001_000
+  end
+
+  def self.registry_index : Int32
+    @@registry_index
+  end
 
   MULTRET = -1
 

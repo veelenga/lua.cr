@@ -169,8 +169,8 @@ module LuaCallable
   end
 
   def self.__call(state : LibLua::State) : Int32
-    data = LibLua.topointer(state, Lua::REGISTRYINDEX - 1) # lua_upvalueindex(1)
-    ptr = LibLua.topointer(state, Lua::REGISTRYINDEX - 2)  # lua_upvalueindex(2)
+    data = LibLua.topointer(state, Lua.registry_index - 1) # lua_upvalueindex(1)
+    ptr = LibLua.topointer(state, Lua.registry_index - 2)  # lua_upvalueindex(2)
     proc = Proc(LibLua::State, Int32).new(ptr, data)
     proc.call(state)
   end
