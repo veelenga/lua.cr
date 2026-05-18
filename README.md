@@ -70,6 +70,33 @@ p sum.as(Lua::Function).call(3.2, 1) # => 4.2
 lua.close
 ```
 
+You can also expose Crystal procs to Lua as global functions. Argument and
+return types are taken from the proc's signature, so values flow naturally
+between the two languages:
+
+```crystal
+lua = Lua.load
+
+lua.function "add", ->(x : Float64, y : Float64) { x + y }
+lua.run "return add(3, 4)" # => 7.0
+
+# closures capture local Crystal state
+counter = 0
+lua.function "tick", -> { counter += 1; nil }
+lua.run "tick(); tick()"
+counter # => 2
+
+# method pointers work too
+def greet(name : String)
+  "Hi, #{name}"
+end
+
+lua.function "greet", ->greet(String)
+lua.run "return greet('Lua')" # => "Hi, Lua"
+
+lua.close
+```
+
 More features coming soon. Try it, that's fun :)
 
 ## Contributing

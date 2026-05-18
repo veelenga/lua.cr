@@ -11,6 +11,7 @@ module Lua
     include StackMixin::CoroutineSupport
     include StackMixin::StandardLibraries
     include StackMixin::ClassSupport
+    include StackMixin::FunctionSupport
 
     getter state
     getter libs = Set(Symbol).new
