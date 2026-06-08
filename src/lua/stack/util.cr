@@ -35,7 +35,7 @@ module Lua
     end
 
     protected def pick_results(start, finish = size)
-      elements = (start..finish).map { pop }
+      elements = (start..finish).map { pop.as(::Lua::Type) }
       elements.size > 1 ? elements : elements.first?
     end
   end
