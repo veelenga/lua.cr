@@ -1,13 +1,13 @@
 require "../src/lua"
 
 begin
-  Lua.run %q{
+  Lua.run %q(
     function runtime_error(x, y)
       return x + y
     end
 
     runtime_error("blah", 10)
-  }
+  )
 rescue e : Lua::RuntimeError
   puts e.message
   puts e.traceback

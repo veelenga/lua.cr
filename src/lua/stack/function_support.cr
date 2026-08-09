@@ -41,7 +41,7 @@ module Lua
         {% else %}
           result = proc.call(
             {% for type, i in Args.type_vars %}
-              ::LuaCallable::LuaConvert({{type}}).convert(stack[{{i + 1}}]),
+              ::LuaCallable::LuaConvert({{ type }}).convert(stack[{{ i + 1 }}]),
             {% end %}
           )
         {% end %}

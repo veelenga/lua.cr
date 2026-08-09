@@ -47,7 +47,7 @@ module LuaCallable
       {% if !@type.abstract? %}
       def self.__new(state : LibLua::State) : Int32
         stack = Lua::Stack.new(state, :all)
-        instance = {{@type.name}}.allocate
+        instance = {{ @type.name }}.allocate
         instance.initialize
         stack << instance
         return 1
@@ -83,7 +83,7 @@ module LuaCallable
       {% end %}
       {% for k, m in method_map %}
           {% if !m.name.ends_with?("=") && !m.name.starts_with?("_") %}
-          if key == "{{m.name}}"
+          if key == "{{ m.name }}"
               proc = ->(state : LibLua::State) {
                 stack = Lua::Stack.new(state, :all)
                 {% reverse_args = [] of Arg %}
@@ -92,15 +92,15 @@ module LuaCallable
                 {% end %}
                 {% for a, index in reverse_args %}
                     {% if a.restriction.is_a?(Nop) %}
-                        {{a.name}} = stack[-{{index + 1}}]
+                        {{ a.name }} = stack[-{{ index + 1 }}]
                     {% else %}
-                        {{a.name}} = LuaConvert({{a.restriction}}).convert(stack[-{{index + 1}}])
+                        {{ a.name }} = LuaConvert({{ a.restriction }}).convert(stack[-{{ index + 1 }}])
                     {% end %}
                 {% end %}
                 {% if m.args.empty? %}
-                res = self.{{m.name}}()
+                res = self.{{ m.name }}()
                 {% else %}
-                res = self.{{m.name}}({{(m.args.map &.name).join(",").id}})
+                res = self.{{ m.name }}({{ (m.args.map &.name).join(",").id }})
                 {% end %}
                 stack << res
                 return 1
@@ -126,19 +126,19 @@ module LuaCallable
   def _index(key : String)
     {% for m in @type.instance_vars %}
         {% if @type.has_method?(m.name) %} #only expose public fields
-        if key == "{{m.name}}"
-            return self.{{m.name}}
+        if key == "{{ m.name }}"
+            return self.{{ m.name }}
         end
         {% end %}
     {% end %}
-    self._call(key)
+    _call(key)
   end
 
   def _newindex(key, val)
     {% for m in @type.instance_vars %}
         {% if @type.has_method?(m.name + "=") %} #only expose public fields
-        if key == "{{m.name}}"
-            self.{{m.name}} = val.as({{m.type}})
+        if key == "{{ m.name }}"
+            self.{{ m.name }} = val.as({{ m.type }})
         end
         {% end %}
     {% end %}

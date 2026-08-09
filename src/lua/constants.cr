@@ -1,5 +1,5 @@
 module Lua
-  alias Type = Nil | Bool | Float64 | String | Lua::Object | Lua::Reference
+  alias Type = Bool | Float64 | String | Lua::Object | Lua::Reference?
 
   enum TYPE
     TNONE          = -1

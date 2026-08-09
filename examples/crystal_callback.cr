@@ -26,9 +26,9 @@ puts lua.run "return greet('Lua')" # => Hi, Lua
 lua.function "join", ->(prefix : String, count : Int32, ok : Bool) do
   "#{prefix}:#{count}:#{ok}"
 end
-puts lua.run %q{
+puts lua.run %q(
   local label = join("requests", 5, true)
   return label .. " (" .. tostring(add(10, 20)) .. ")"
-} # => requests:5:true (30.0)
+) # => requests:5:true (30.0)
 
 lua.close

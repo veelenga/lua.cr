@@ -44,11 +44,11 @@ module Lua
       open_libs(libs)
 
       if @libs.includes?(:debug)
-        set_error_handler %q{
+        set_error_handler %q(
           function(e)
             return { message = e, traceback = debug.traceback() }
           end
-        }
+        )
       else
         set_error_handler "function(e) return { message = e } end"
       end
@@ -113,7 +113,7 @@ module Lua
     # stack[2] # => "lua"
     # ```
     def [](pos : Int)
-      return nil if pos == 0
+      return if pos == 0
 
       case type_at(pos)
       when TYPE::TNIL, TYPE::TNONE then nil
