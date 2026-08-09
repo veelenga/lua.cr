@@ -26,6 +26,17 @@ module Lua
         sum.call(2, 3).should be_nil
       end
 
+      it "returns multiple values in order" do
+        swap = Lua::Stack.new.run(%q(
+          function swap(x, y)
+            return y, x
+          end
+
+          return swap
+        )).as(Lua::Function)
+        swap.call(1, 2).should eq [2.0, 1.0]
+      end
+
       it "can call a function without arguments" do
         f = Lua::Stack.new.run(%q(
           function ff()

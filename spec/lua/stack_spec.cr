@@ -53,6 +53,10 @@ module Lua
         Stack.new.tap(&.<< :message)[1].should eq "message"
       end
 
+      it "can push string with embedded zero bytes" do
+        Stack.new.tap(&.<< "a\u{0}b")[1].should eq "a\u{0}b"
+      end
+
       it "can push array" do
         r = Stack.new.tap(&.<< %w[lua is cool])[1].as(Table).map { |_, v| v }
         r.should eq %w[lua is cool]
@@ -140,6 +144,21 @@ module Lua
 
       it "returns nil when stack is empty" do
         Stack.new.pop.should be_nil
+      end
+
+      it "removes a nil element from the top of the stack" do
+        stack = Stack.new.tap(&.<< nil)
+        stack.pop.should be_nil
+        stack.size.should eq 0
+      end
+
+      it "does not lose values below a popped nil" do
+        stack = Stack.new
+        stack << 5
+        stack << nil
+        stack.pop.should be_nil
+        stack.pop.should eq 5.0
+        stack.size.should eq 0
       end
     end
 
