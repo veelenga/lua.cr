@@ -141,6 +141,21 @@ module Lua
       it "returns nil when stack is empty" do
         Stack.new.pop.should be_nil
       end
+
+      it "removes a nil element from the top of the stack" do
+        stack = Stack.new.tap(&.<< nil)
+        stack.pop.should be_nil
+        stack.size.should eq 0
+      end
+
+      it "does not lose values below a popped nil" do
+        stack = Stack.new
+        stack << 5
+        stack << nil
+        stack.pop.should be_nil
+        stack.pop.should eq 5.0
+        stack.size.should eq 0
+      end
     end
 
     describe "#remove" do

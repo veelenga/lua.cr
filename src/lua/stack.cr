@@ -202,7 +202,8 @@ module Lua
     # stack.size # => 0
     # ```
     def pop
-      top.try &.tap { remove }
+      return if size == 0
+      top.tap { remove }
     end
 
     # Removes n elements from the stack.
