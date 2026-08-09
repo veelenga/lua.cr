@@ -49,6 +49,19 @@ module Lua
         lua.close
       end
 
+      it "yields multiple values in order" do
+        lua = Lua.load
+        t = lua.run %q(
+          return coroutine.create(function()
+            coroutine.yield(1, 2, "three")
+          end)
+        )
+
+        co = t.as(Lua::Coroutine)
+        co.resume.should eq [1.0, 2.0, "three"]
+        lua.close
+      end
+
       it "can return an error" do
         lua = Lua.load
         t = lua.run %q(

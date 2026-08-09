@@ -44,6 +44,21 @@ module Lua::StackMixin
         s.close
       end
 
+      context "with multiple return values" do
+        it "returns the values in order" do
+          s = Stack.new
+          s.run(%q( return 1, 2, "three" )).should eq [1.0, 2.0, "three"]
+          s.close
+        end
+
+        it "keeps nil values and leaves the stack clean" do
+          s = Stack.new
+          s.run(%q( return 5, nil )).should eq [5.0, nil]
+          s.size.should eq 0
+          s.close
+        end
+      end
+
       context "with multibyte UTF-8 characters" do
         it "keeps the full chunk when a comment contains multibyte characters" do
           s = Stack.new

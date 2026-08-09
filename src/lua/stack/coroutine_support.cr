@@ -9,14 +9,13 @@ module Lua::StackMixin
 
     # Starts and resumes a coroutine in the given thread
     protected def resume(*args)
-      thread_pos = size
       args.each { |arg| self.<< arg }
 
       nres = 0
       res = CALL.new LibLua.resume(@state, nil, args.size, pointerof(nres))
       raise error(res, pop) if res > CALL::YIELD
 
-      pick_results thread_pos
+      pick_results size - nres + 1
     end
 
     # Returns the status of the current thread.
