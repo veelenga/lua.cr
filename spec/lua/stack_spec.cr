@@ -22,7 +22,7 @@ module Lua
 
     describe "#<<" do
       it "can push nil value" do
-        Stack.new.tap(&.<< nil)[1].should eq nil
+        Stack.new.tap(&.<< nil)[1].should be_nil
       end
 
       it "can push int value" do
@@ -34,11 +34,11 @@ module Lua
       end
 
       it "can push bool true value" do
-        Stack.new.tap(&.<< true)[1].should eq true
+        Stack.new.tap(&.<< true)[1].should be_true
       end
 
       it "can push bool false value" do
-        Stack.new.tap(&.<< false)[1].should eq false
+        Stack.new.tap(&.<< false)[1].should be_false
       end
 
       it "can push char value" do
@@ -54,8 +54,8 @@ module Lua
       end
 
       it "can push array" do
-        r = Stack.new.tap(&.<< %w(lua is cool))[1].as(Table).map { |_, v| v }
-        r.should eq %w(lua is cool)
+        r = Stack.new.tap(&.<< %w[lua is cool])[1].as(Table).map { |_, v| v }
+        r.should eq %w[lua is cool]
       end
 
       it "can push hash" do
@@ -65,12 +65,12 @@ module Lua
 
       it "can push tuple" do
         r = Stack.new.tap(&.<<({:one, :two, :three}))[1].as(Table).map { |_, v| v }
-        r.should eq %w(one two three)
+        r.should eq %w[one two three]
       end
 
       it "can push named tuple" do
         r = Stack.new.tap(&.<<({one: '1', two: '2', three: '3'}))[1].as(Table).map { |_, v| v.as(String) }
-        r.sort.should eq %w(1 2 3)
+        r.sort.should eq %w[1 2 3]
       end
 
       it "can push inner array" do
@@ -97,7 +97,7 @@ module Lua
       end
 
       it "returns nil for 0" do
-        Stack.new[0].should eq nil
+        Stack.new[0].should be_nil
       end
     end
 
@@ -139,13 +139,13 @@ module Lua
       end
 
       it "returns nil when stack is empty" do
-        Stack.new.pop.should eq nil
+        Stack.new.pop.should be_nil
       end
     end
 
     describe "#remove" do
       it "removes element from the top of the stack and does not return it" do
-        Stack.new.tap(&.<< 100).remove.should eq nil
+        Stack.new.tap(&.<< 100).remove.should be_nil
       end
 
       it "can remove n elements" do
@@ -153,7 +153,7 @@ module Lua
         stack << 1
         stack << 3
         stack << 5
-        stack.remove(2).should eq nil
+        stack.remove(2).should be_nil
         stack.size.should eq 1
       end
 
@@ -162,7 +162,7 @@ module Lua
         stack << :"1"
         stack << :"3"
         stack << :"5"
-        stack.remove(stack.size).should eq nil
+        stack.remove(stack.size).should be_nil
         stack.size.should eq 0
       end
 

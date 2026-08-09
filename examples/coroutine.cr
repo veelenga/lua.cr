@@ -1,7 +1,7 @@
 require "../src/lua"
 
 lua = Lua.load
-co = lua.run(%q{
+co = lua.run(%q(
   function foo (a)
     print("foo", a)
     return coroutine.yield(2*a)
@@ -15,7 +15,7 @@ co = lua.run(%q{
     print("co-body", r, s)
     return b, "end"
   end)
-}).as(Lua::Coroutine)
+)).as(Lua::Coroutine)
 
 res = co.resume 1, 10
 puts "main #{res}"

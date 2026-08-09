@@ -9,21 +9,21 @@ module Lua::StackMixin
     end
 
     it "can catch lua syntax error" do
-      expect_raises SyntaxError, %q[unexpected symbol near '"a"'] do
-        Lua.run %q{
+      expect_raises SyntaxError, %q(unexpected symbol near '"a"') do
+        Lua.run %q(
           "a" * 3
-        }
+        )
       end
     end
 
     it "can catch lua stack overflow" do
       expect_raises RuntimeError, "stack overflow" do
-        Lua.run %q{
+        Lua.run %q(
           function s()
             s()
           end
           s()
-        }
+        )
       end
     end
 
@@ -39,35 +39,35 @@ module Lua::StackMixin
     it "can give you a lua error message" do
       stack = Stack.new
       expect_raises RuntimeError, "attempt to add a 'string' with a 'number'" do
-        stack.run %q{
+        stack.run %q(
           s = "a" + 1
-        }
+        )
       end
     end
 
     it "can give you a lua traceback" do
       stack = Stack.new
       expect_raises RuntimeError, "attempt to add a 'string' with a 'number'" do
-        stack.run %q{
+        stack.run %q(
           s = function()
             return "a" + 1
           end
 
           print(s())
-        }
+        )
       end.traceback.should match /stack traceback:/
     end
 
     it "can give you a lua traceback with correct structure" do
       stack = Stack.new
       expect_raises RuntimeError, "attempt to add a 'string' with a 'number'" do
-        stack.run %q{
+        stack.run %q(
           s = function()
             return "a" + 1
           end
 
           print(s())
-        }
+        )
       end.traceback.tap do |traceback|
         traceback.should match /in metamethod 'add'/
         traceback.should match /in main chunk/
@@ -76,11 +76,11 @@ module Lua::StackMixin
 
     it "throws RuntimeError on non-emtpy stack" do
       stack = Stack.new.tap &.<< 1
-      sum = stack.run %q{
+      sum = stack.run %q(
         return function (x, y)
           return x + y
         end
-      }
+      )
       expect_raises RuntimeError, "attempt to add a 'string' with a 'number'" do
         sum.as(Lua::Function).call("a", 3)
       end

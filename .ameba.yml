@@ -1,5 +1,7 @@
 LineLength:
   MaxLength: 150
+Style/MultilineStringLiteral:
+  Enabled: false
 Metrics/CyclomaticComplexity:
   Enabled: true
   MaxComplexity: 15

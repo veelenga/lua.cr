@@ -7,7 +7,7 @@ module Lua::StackMixin
         t = Stack.new.tap(&.pushtable([1, true, false, "a"])).pop.as(Lua::Table)
         t.size.should eq 4
         t[1].should eq 1
-        t[2].should eq true
+        t[2].should be_true
         t[4].should eq "a"
       end
 

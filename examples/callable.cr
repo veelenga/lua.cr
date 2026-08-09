@@ -92,7 +92,7 @@ end
 
 # single farm company
 stack.set_global("farm", MyLuaModule.new)
-stack.run %q{
+stack.run %q(
   print(farm.hello_farm())
   rose = farm.new_cow("Rose")
   rose.milk()
@@ -113,11 +113,11 @@ stack.run %q{
   assert(tiger.hungry == 0)
   assert(rose.hungry == 0)
   assert(flower.hungry == 0)
-}
+)
 
 # multi farm company
 stack.set_global("Farm", MyLuaModule)
-stack.run %q{
+stack.run %q(
   europe_farm = Farm.new()
   us_farm = Farm.new()
   rose = us_farm.new_cow("Rose")
@@ -125,4 +125,4 @@ stack.run %q{
   brunhilde = europe_farm.new_cow("Brunhilde")
   brunhilde.milk()
   assert(rose.hungry == brunhilde.hungry, "Do Cows Moo in Different Accents?")
-}
+)

@@ -7,11 +7,11 @@ module Lua::StackMixin
         s = Stack.new
         obj = CallableClass.new
         s.set_global("o", obj)
-        res = s.run %q{
+        res = s.run %q(
           c = o.w
           o.w = "Lua"
           return c
-        }
+        )
         res.should eq "Crystal"
         obj.w.should eq "Lua"
       end
@@ -20,13 +20,13 @@ module Lua::StackMixin
         s = Stack.new
         obj = CallableClass.new
         s.set_global("o", obj)
-        res = s.run %q{
+        res = s.run %q(
           return o.simple_function()
-        }
+        )
         res.should eq "Hello from CallableClass"
-        res = s.run %q{
+        res = s.run %q(
           return o.arg_function("Dogs", 4)
-        }
+        )
         res.should eq "4 Dogs"
       end
 
@@ -38,20 +38,20 @@ module Lua::StackMixin
         obj2.w = "Second"
         s.set_global("o1", obj1)
         s.set_global("o2", obj2)
-        res = s.run %q{
+        res = s.run %q(
           return o1.join_other(o2)
-        }
+        )
         res.should eq "Second after First"
       end
 
       it "create new callable instance from Lua" do
         s = Stack.new
         s.set_global("m", CallableClass)
-        res = s.run %q{
+        res = s.run %q(
           n = m.new()
           n.w = "Lua"
           return n
-        }
+        )
         res.should be_a(Lua::Callable)
         cc = res.as(Lua::Callable)
         cc.crystal_type_name.should eq CallableClass.name
@@ -64,7 +64,7 @@ module Lua::StackMixin
         s = Stack.new
         s.set_global("cs", CallableSubClass)
         s.set_global("csi", CallableSubClass.new)
-        s.run %q{
+        s.run %q(
           csi2 = cs.new()
           assert(csi.subclass_function() == "Hi i'm CallableSubClass. This is my own function.", "call subclass method wrong res: " .. csi.subclass_function())
           assert(csi.simple_function() == "Hello from CallableSubClass", "call overriden method wrong res: " .. csi.simple_function())
@@ -72,7 +72,7 @@ module Lua::StackMixin
           csi.w = "First"
           csi2.w = "Second"
           assert(csi.join_other(csi2) == "Second after First", "call inherited method wrong res: " .. csi.join_other(csi2))
-        }
+        )
       end
     end
   end
@@ -90,7 +90,7 @@ module Lua::StackMixin
     end
 
     def join_other(other : CallableClass) : String
-      "#{other.w} after #{self.w}"
+      "#{other.w} after #{w}"
     end
   end
 

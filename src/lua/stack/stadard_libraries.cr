@@ -1,6 +1,6 @@
 module Lua::StackMixin
   module StandardLibraries
-    MODULES = %i(
+    MODULES = %i[
       base
       package
       coroutine
@@ -11,7 +11,7 @@ module Lua::StackMixin
       math
       utf8
       debug
-    )
+    ]
 
     # Opens Lua standard libraries.
     #
@@ -27,14 +27,14 @@ module Lua::StackMixin
     end
 
     macro open_library(library)
-      case {{library}}
+      case {{ library }}
         {% for name in MODULES %}
-          when {{name}}
-            LibLua.l_requiref(@state, {{name}}.to_s, ->(l : LibLua::State) { LibLua.open_{{name.id}}(l) }, 1)
+          when {{ name }}
+            LibLua.l_requiref(@state, {{ name }}.to_s, ->(l : LibLua::State) { LibLua.open_{{ name.id }}(l) }, 1)
             remove # remove the copy of returned module
         {% end %}
       else
-        raise ArgumentError.new "unable to load '#{{{library}}}' lib. Try one of the following: #{MODULES.join(", ")}"
+        raise ArgumentError.new "unable to load '#{{{ library }}}' lib. Try one of the following: #{MODULES.join(", ")}"
       end
     end
   end

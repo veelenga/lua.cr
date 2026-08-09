@@ -31,4 +31,4 @@ jobs:
         run: crystal spec
 
       - name: Run linter
-        run: ./bin/ameba
+        run: crystal run lib/ameba/bin/ameba.cr

@@ -19,16 +19,16 @@ module Lua
 
       it "converts bool" do
         t = table [true, false]
-        t[1].should eq true
-        t[2].should eq false
+        t[1].should be_true
+        t[2].should be_false
       end
 
       it "returns nil if there is no values" do
-        table([] of String)[1].should eq nil
+        table([] of String)[1].should be_nil
       end
 
       it "converts" do
-        table([nil])[1].should eq nil
+        table([nil])[1].should be_nil
       end
 
       it "converts char" do
@@ -47,8 +47,8 @@ module Lua
         t[1].should eq "one"
         t[2].should eq "two"
         t[3].should eq "x"
-        t[4].should eq true
-        t[5].should eq false
+        t[4].should be_true
+        t[5].should be_false
         t[6].should eq 3.0
         t[7].as(Table)[1].should eq "a"
       end
@@ -57,7 +57,7 @@ module Lua
         t = table({one: 1, "two": 2, bool: true, char: 'x', tuple: {:one}})
         t["one"].should eq 1
         t["two"].should eq 2
-        t["bool"].should eq true
+        t["bool"].should be_true
         t["char"].should eq "x"
         t["tuple"].as(Table)[1].should eq "one"
       end
@@ -67,7 +67,7 @@ module Lua
         t[1].should eq 1
         t[2].should eq "a"
         t[3].as(Table).tap do |nested|
-          nested[1].should eq true
+          nested[1].should be_true
           nested[2].as(Table)["key"].should eq "value"
         end
         t.select { |_, v| v.is_a?(String) }.should eq [{2, "a"}]
@@ -88,14 +88,14 @@ module Lua
       end
 
       it "updates existed value" do
-        t = table %w(a b)
+        t = table %w[a b]
         t[2].should eq "b"
         t[2] = "c"
         t[2].should eq "c"
       end
 
       it "sets/updates value if table is removed from the stack" do
-        t = Stack.new.tap(&.<< %w(a b)).pop.as(Table)
+        t = Stack.new.tap(&.<< %w[a b]).pop.as(Table)
         t[1].should eq "a"
         t[1] = "aabb"
         t[1].should eq "aabb"
