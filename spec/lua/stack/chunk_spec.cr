@@ -43,6 +43,23 @@ module Lua::StackMixin
         )).should be_a Function
         s.close
       end
+
+      context "with multibyte UTF-8 characters" do
+        it "keeps the full chunk when a comment contains multibyte characters" do
+          s = Stack.new
+          s.run(%q(
+            -- é à ç — สวัสดี 你好
+            return 42
+          )).should eq 42
+          s.close
+        end
+
+        it "passes multibyte bytes through inside string literals" do
+          s = Stack.new
+          s.run(%q( return "é — สวัสดี 你好" )).should eq "é — สวัสดี 你好"
+          s.close
+        end
+      end
     end
 
     describe "#run" do

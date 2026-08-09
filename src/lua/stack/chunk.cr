@@ -13,7 +13,7 @@ module Lua
     # } # => 8
     # ```
     def run(buff : String, name : String? = nil)
-      call = CALL.new LibLua.l_loadbufferx @state, buff, buff.size, name || buff.strip, nil
+      call = CALL.new LibLua.l_loadbufferx @state, buff, buff.bytesize, name || buff.strip, nil
       raise error(call, pop) if call != CALL::OK
       call_and_return size
     end
