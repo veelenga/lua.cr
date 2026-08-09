@@ -146,7 +146,8 @@ module LuaCallable
 
   def self.__index(state : LibLua::State) : Int32 # __index(t,k)
     stack = Lua::Stack.new(state, :all)
-    key = String.new LibLua.tolstring(state, -1, nil)
+    chars = LibLua.tolstring(state, -1, out len)
+    key = String.new(chars.as(UInt8*), len)
     data = LibLua.touserdata(state, -2).as(LuaCallable*)
     pointer = data.value
     val = pointer._index(key)

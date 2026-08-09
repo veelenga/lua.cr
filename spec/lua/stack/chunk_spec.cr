@@ -75,6 +75,21 @@ module Lua::StackMixin
           s.close
         end
       end
+
+      context "with embedded zero bytes" do
+        it "returns the full string" do
+          s = Stack.new
+          s.run(%q( return "a\0b" )).should eq "a\u{0}b"
+          s.close
+        end
+
+        it "passes the full string to Lua" do
+          s = Stack.new
+          s.set_global("x", "a\u{0}b")
+          s.run(%q( return #x )).should eq 3
+          s.close
+        end
+      end
     end
 
     describe "#run" do

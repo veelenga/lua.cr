@@ -82,9 +82,9 @@ module Lua
       when Int                        then LibLua.pushinteger(@state, o)
       when Float                      then LibLua.pushnumber(@state, o)
       when Bool                       then LibLua.pushboolean(@state, o ? 1 : 0)
-      when Char                       then LibLua.pushstring(@state, o.to_s)
-      when String                     then LibLua.pushstring(@state, o)
-      when Symbol                     then LibLua.pushstring(@state, o.to_s)
+      when Char                       then push_string o.to_s
+      when String                     then push_string o
+      when Symbol                     then push_string o.to_s
       when Array, Tuple               then pushtable(o.to_a)
       when Hash, NamedTuple           then pushtable(o.to_h)
       when Proc(LibLua::State, Int32) then pushclosure(o.as(Proc))
@@ -119,7 +119,7 @@ module Lua
       when TYPE::TNIL, TYPE::TNONE then nil
       when TYPE::TBOOLEAN          then LibLua.toboolean(@state, pos) == 1
       when TYPE::TNUMBER           then LibLua.tonumberx(@state, pos, nil)
-      when TYPE::TSTRING           then String.new LibLua.tolstring(@state, pos, nil)
+      when TYPE::TSTRING           then string_at(pos)
       when TYPE::TTABLE            then Table.new self, reference(pos)
       when TYPE::TFUNCTION         then Function.new self, reference(pos)
       when TYPE::TTHREAD           then Coroutine.new Stack.new(LibLua.tothread(@state, pos), libs.to_a)
@@ -219,6 +219,15 @@ module Lua
     def remove(n : Int = 1)
       n = n < 0 ? 0 : [n, size].min
       LibLua.settop(@state, -n - 1)
+    end
+
+    private def push_string(s : String)
+      LibLua.pushlstring(@state, s, s.bytesize)
+    end
+
+    private def string_at(pos)
+      chars = LibLua.tolstring(@state, pos, out len)
+      String.new(chars.as(UInt8*), len)
     end
   end
 end

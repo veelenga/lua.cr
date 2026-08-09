@@ -53,6 +53,10 @@ module Lua
         Stack.new.tap(&.<< :message)[1].should eq "message"
       end
 
+      it "can push string with embedded zero bytes" do
+        Stack.new.tap(&.<< "a\u{0}b")[1].should eq "a\u{0}b"
+      end
+
       it "can push array" do
         r = Stack.new.tap(&.<< %w[lua is cool])[1].as(Table).map { |_, v| v }
         r.should eq %w[lua is cool]
